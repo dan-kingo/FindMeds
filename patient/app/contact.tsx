@@ -1,17 +1,27 @@
-import { View, Text, StyleSheet, ScrollView, Linking, TextInput, TouchableOpacity } from 'react-native';
-import { Card, Divider, useTheme, Button } from 'react-native-paper';
-import { MaterialIcons, FontAwesome, Ionicons } from '@expo/vector-icons';
-import { useState } from 'react';
-import Header from '@/src/components/Header';
+import {
+  View,
+  Text,
+  StyleSheet,
+  ScrollView,
+  Linking,
+  TextInput,
+  TouchableOpacity,
+} from "react-native";
+import { Card, Divider, useTheme, Button } from "react-native-paper";
+import { MaterialIcons, FontAwesome, Ionicons } from "@expo/vector-icons";
+import { useState } from "react";
+import Header from "@/src/components/Header";
 export default function ContactScreen() {
   const theme = useTheme();
-  const [name, setName] = useState('');
-  const [email, setEmail] = useState('');
-  const [message, setMessage] = useState('');
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [message, setMessage] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const openLink = (url: string) => {
-    Linking.openURL(url).catch(err => console.error("Failed to open URL:", err));
+    Linking.openURL(url).catch((err) =>
+      console.error("Failed to open URL:", err),
+    );
   };
 
   const handleSubmit = () => {
@@ -20,32 +30,45 @@ export default function ContactScreen() {
     console.log({ name, email, message });
     setTimeout(() => {
       setIsSubmitting(false);
-      setName('');
-      setEmail('');
-      setMessage('');
-      alert('Thank you for your message! We will get back to you soon.');
+      setName("");
+      setEmail("");
+      setMessage("");
+      alert("Thank you for your message! We will get back to you soon.");
     }, 1500);
   };
 
   return (
     <>
       <Header title="Contact Us" showBack />
-    <ScrollView contentContainerStyle={[styles.container, { backgroundColor: theme.colors.background }]}>
-      <View style={styles.header}>
-        <Text style={[styles.title, { color: theme.colors.primary }]}>Contact Us</Text>
-        <Text style={styles.subtitle}>We're here to help and answer any questions</Text>
-      </View>
+      <ScrollView
+        contentContainerStyle={[
+          styles.container,
+          { backgroundColor: theme.colors.background },
+        ]}
+      >
+        <View style={styles.header}>
+          <Text style={[styles.title, { color: theme.colors.primary }]}>
+            Contact Us
+          </Text>
+          <Text style={styles.subtitle}>
+            We're here to help and answer any questions
+          </Text>
+        </View>
 
-      {/* Contact Information Cards */}
-    
+        {/* Contact Information Cards */}
+
         <Card style={styles.contactCard}>
           <Card.Content style={styles.cardContent}>
-            <Ionicons name="call-outline" size={28} color={theme.colors.primary} />
+            <Ionicons
+              name="call-outline"
+              size={28}
+              color={theme.colors.primary}
+            />
             <Text style={styles.contactType}>Phone Support</Text>
             <Text style={styles.contactInfo}>+1 (800) 555-1234</Text>
-            <Button 
-              mode="outlined" 
-              onPress={() => openLink('tel:+18005551234')}
+            <Button
+              mode="outlined"
+              onPress={() => openLink("tel:+18005551234")}
               style={styles.contactButton}
               icon="phone"
             >
@@ -56,12 +79,16 @@ export default function ContactScreen() {
 
         <Card style={styles.contactCard}>
           <Card.Content style={styles.cardContent}>
-            <MaterialIcons name="email" size={28} color={theme.colors.primary} />
+            <MaterialIcons
+              name="email"
+              size={28}
+              color={theme.colors.primary}
+            />
             <Text style={styles.contactType}>Email Us</Text>
-            <Text style={styles.contactInfo}>support@MedStream.com</Text>
-            <Button 
-              mode="outlined" 
-              onPress={() => openLink('mailto:support@MedStream.com')}
+            <Text style={styles.contactInfo}>support@FindMeds.com</Text>
+            <Button
+              mode="outlined"
+              onPress={() => openLink("mailto:support@FindMeds.com")}
               style={styles.contactButton}
               icon="email"
             >
@@ -69,65 +96,101 @@ export default function ContactScreen() {
             </Button>
           </Card.Content>
         </Card>
-      
 
-      <Card style={styles.contactCard}>
-        <Card.Content style={styles.cardContent}>
-          <FontAwesome name="map-marker" size={28} color={theme.colors.primary} />
-          <Text style={styles.contactType}>Corporate Office</Text>
-          <Text style={styles.contactInfo}>123 MedStream way</Text>
-          <Text style={styles.contactInfo}>poly campus, Bahir Dar</Text>
-          <Text style={styles.contactInfo}>Ethiopia</Text>
-          <Button 
-            mode="outlined" 
-            onPress={() => openLink('https://maps.google.com/?q=poly+campus,+Bahir+Dar,+Ethiopia')}
-            style={styles.contactButton}
-            icon="map"
-          >
-            View on Map
-          </Button>
-        </Card.Content>
-      </Card>
+        <Card style={styles.contactCard}>
+          <Card.Content style={styles.cardContent}>
+            <FontAwesome
+              name="map-marker"
+              size={28}
+              color={theme.colors.primary}
+            />
+            <Text style={styles.contactType}>Corporate Office</Text>
+            <Text style={styles.contactInfo}>123 FindMeds way</Text>
+            <Text style={styles.contactInfo}>poly campus, Bahir Dar</Text>
+            <Text style={styles.contactInfo}>Ethiopia</Text>
+            <Button
+              mode="outlined"
+              onPress={() =>
+                openLink(
+                  "https://maps.google.com/?q=poly+campus,+Bahir+Dar,+Ethiopia",
+                )
+              }
+              style={styles.contactButton}
+              icon="map"
+            >
+              View on Map
+            </Button>
+          </Card.Content>
+        </Card>
 
-      
-      {/* Business Hours */}
-      <Card style={styles.hoursCard}>
-        <Card.Content>
-          <Text style={[styles.hoursTitle, { color: theme.colors.primary }]}>Business Hours</Text>
-          <View style={styles.hoursRow}>
-            <Text style={styles.hoursDay}>Monday - Friday</Text>
-            <Text style={styles.hoursTime}>9:00 AM - 6:00 PM</Text>
-          </View>
-          <View style={styles.hoursRow}>
-            <Text style={styles.hoursDay}>Saturday</Text>
-            <Text style={styles.hoursTime}>10:00 AM - 4:00 PM</Text>
-          </View>
-          <View style={styles.hoursRow}>
-            <Text style={styles.hoursDay}>Sunday</Text>
-            <Text style={styles.hoursTime}>Closed</Text>
-          </View>
-        </Card.Content>
-      </Card>
+        {/* Business Hours */}
+        <Card style={styles.hoursCard}>
+          <Card.Content>
+            <Text style={[styles.hoursTitle, { color: theme.colors.primary }]}>
+              Business Hours
+            </Text>
+            <View style={styles.hoursRow}>
+              <Text style={styles.hoursDay}>Monday - Friday</Text>
+              <Text style={styles.hoursTime}>9:00 AM - 6:00 PM</Text>
+            </View>
+            <View style={styles.hoursRow}>
+              <Text style={styles.hoursDay}>Saturday</Text>
+              <Text style={styles.hoursTime}>10:00 AM - 4:00 PM</Text>
+            </View>
+            <View style={styles.hoursRow}>
+              <Text style={styles.hoursDay}>Sunday</Text>
+              <Text style={styles.hoursTime}>Closed</Text>
+            </View>
+          </Card.Content>
+        </Card>
 
-      {/* Social Media */}
-      <View style={styles.socialContainer}>
-        <Text style={styles.socialTitle}>Connect With Us</Text>
-        <View style={styles.socialIcons}>
-          <TouchableOpacity onPress={() => openLink('https://facebook.com/MedStream')}>
-            <FontAwesome name="facebook" size={28} color="#3b5998" style={styles.socialIcon} />
-          </TouchableOpacity>
-          <TouchableOpacity onPress={() => openLink('https://twitter.com/MedStream')}>
-            <FontAwesome name="twitter" size={28} color="#1DA1F2" style={styles.socialIcon} />
-          </TouchableOpacity>
-          <TouchableOpacity onPress={() => openLink('https://instagram.com/MedStream')}>
-            <FontAwesome name="instagram" size={28} color="#E1306C" style={styles.socialIcon} />
-          </TouchableOpacity>
-          <TouchableOpacity onPress={() => openLink('https://linkedin.com/company/MedStream')}>
-            <FontAwesome name="linkedin" size={28} color="#0077B5" style={styles.socialIcon} />
-          </TouchableOpacity>
+        {/* Social Media */}
+        <View style={styles.socialContainer}>
+          <Text style={styles.socialTitle}>Connect With Us</Text>
+          <View style={styles.socialIcons}>
+            <TouchableOpacity
+              onPress={() => openLink("https://facebook.com/FindMeds")}
+            >
+              <FontAwesome
+                name="facebook"
+                size={28}
+                color="#3b5998"
+                style={styles.socialIcon}
+              />
+            </TouchableOpacity>
+            <TouchableOpacity
+              onPress={() => openLink("https://twitter.com/FindMeds")}
+            >
+              <FontAwesome
+                name="twitter"
+                size={28}
+                color="#1DA1F2"
+                style={styles.socialIcon}
+              />
+            </TouchableOpacity>
+            <TouchableOpacity
+              onPress={() => openLink("https://instagram.com/FindMeds")}
+            >
+              <FontAwesome
+                name="instagram"
+                size={28}
+                color="#E1306C"
+                style={styles.socialIcon}
+              />
+            </TouchableOpacity>
+            <TouchableOpacity
+              onPress={() => openLink("https://linkedin.com/company/FindMeds")}
+            >
+              <FontAwesome
+                name="linkedin"
+                size={28}
+                color="#0077B5"
+                style={styles.socialIcon}
+              />
+            </TouchableOpacity>
+          </View>
         </View>
-      </View>
-    </ScrollView>
+      </ScrollView>
     </>
   );
 }
@@ -138,22 +201,22 @@ const styles = StyleSheet.create({
     paddingBottom: 40,
   },
   header: {
-    alignItems: 'center',
+    alignItems: "center",
     marginBottom: 30,
   },
   title: {
     fontSize: 28,
-    fontWeight: 'bold',
+    fontWeight: "bold",
     marginBottom: 8,
   },
   subtitle: {
     fontSize: 16,
-    color: '#666',
-    textAlign: 'center',
+    color: "#666",
+    textAlign: "center",
   },
   contactMethods: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
+    flexDirection: "row",
+    justifyContent: "space-between",
     marginBottom: 20,
   },
   contactCard: {
@@ -163,22 +226,22 @@ const styles = StyleSheet.create({
     elevation: 2,
   },
   cardContent: {
-    alignItems: 'center',
+    alignItems: "center",
     padding: 20,
   },
   contactType: {
     fontSize: 18,
-    fontWeight: '600',
+    fontWeight: "600",
     marginVertical: 10,
   },
   contactInfo: {
     fontSize: 16,
-    color: '#555',
-    textAlign: 'center',
+    color: "#555",
+    textAlign: "center",
     marginBottom: 15,
   },
   contactButton: {
-    width: '100%',
+    width: "100%",
     marginTop: 10,
   },
   formCard: {
@@ -188,13 +251,13 @@ const styles = StyleSheet.create({
   },
   formTitle: {
     fontSize: 20,
-    fontWeight: '600',
+    fontWeight: "600",
     marginBottom: 20,
-    textAlign: 'center',
+    textAlign: "center",
   },
   input: {
     borderWidth: 1,
-    borderColor: '#ddd',
+    borderColor: "#ddd",
     borderRadius: 8,
     padding: 15,
     marginBottom: 15,
@@ -202,7 +265,7 @@ const styles = StyleSheet.create({
   },
   messageInput: {
     height: 120,
-    textAlignVertical: 'top',
+    textAlignVertical: "top",
   },
   submitButton: {
     marginTop: 10,
@@ -218,13 +281,13 @@ const styles = StyleSheet.create({
   },
   hoursTitle: {
     fontSize: 20,
-    fontWeight: '600',
+    fontWeight: "600",
     marginBottom: 15,
-    textAlign: 'center',
+    textAlign: "center",
   },
   hoursRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
+    flexDirection: "row",
+    justifyContent: "space-between",
     marginBottom: 12,
   },
   hoursDay: {
@@ -232,20 +295,20 @@ const styles = StyleSheet.create({
   },
   hoursTime: {
     fontSize: 16,
-    fontWeight: '500',
+    fontWeight: "500",
   },
   socialContainer: {
-    alignItems: 'center',
+    alignItems: "center",
     marginTop: 20,
   },
   socialTitle: {
     fontSize: 18,
-    fontWeight: '600',
+    fontWeight: "600",
     marginBottom: 15,
   },
   socialIcons: {
-    flexDirection: 'row',
-    justifyContent: 'center',
+    flexDirection: "row",
+    justifyContent: "center",
   },
   socialIcon: {
     marginHorizontal: 15,

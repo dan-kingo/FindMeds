@@ -1,57 +1,62 @@
-import React, { useState } from 'react';
-import { View, StyleSheet, TouchableWithoutFeedback, Keyboard } from 'react-native';
-import { Text, TextInput, Button, HelperText } from 'react-native-paper';
-import { router } from 'expo-router';
-import Animated, { FadeInDown } from 'react-native-reanimated';
-import Toast from 'react-native-toast-message';
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import React, { useState } from "react";
+import {
+  View,
+  StyleSheet,
+  TouchableWithoutFeedback,
+  Keyboard,
+} from "react-native";
+import { Text, TextInput, Button, HelperText } from "react-native-paper";
+import { router } from "expo-router";
+import Animated, { FadeInDown } from "react-native-reanimated";
+import Toast from "react-native-toast-message";
+import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 
-import { theme } from '@/src/constants/theme';
-import { authAPI } from '@/src/services/api';
-import Header from '@/src/components/Header';
+import { theme } from "@/src/constants/theme";
+import { authAPI } from "@/src/services/api";
+import Header from "@/src/components/Header";
 
 export default function RegisterScreen() {
   const [formData, setFormData] = useState({
-    name: '',
-    phone: '',
-    email: '',
-    location: '',
+    name: "",
+    phone: "",
+    email: "",
+    location: "",
   });
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
-  const [password, setPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   const validateForm = () => {
     const newErrors: { [key: string]: string } = {};
-    
+
     if (!formData.name.trim()) {
-      newErrors.name = 'Name is required';
+      newErrors.name = "Name is required";
     }
-    
+
     if (!formData.phone.trim()) {
-      newErrors.phone = 'Phone number is required';
+      newErrors.phone = "Phone number is required";
     }
 
     if (!formData.email.trim()) {
-      newErrors.email = 'Email is required';
+      newErrors.email = "Email is required";
     } else if (!/^\S+@\S+\.\S+$/.test(formData.email)) {
-      newErrors.email = 'Please enter a valid email address';
+      newErrors.email = "Please enter a valid email address";
     }
-    
+
     if (!formData.location.trim()) {
-      newErrors.location = 'Location is required';
+      newErrors.location = "Location is required";
     }
 
     if (!password || password.length < 6) {
-      newErrors.password = 'Password must be at least 6 characters';
+      newErrors.password = "Password must be at least 6 characters";
     }
     if (password !== confirmPassword) {
-      newErrors.confirmPassword = 'Passwords do not match';
+      newErrors.confirmPassword = "Passwords do not match";
     }
-    
+
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
@@ -73,22 +78,23 @@ export default function RegisterScreen() {
       const response = await authAPI.verifyOtp(formData.phone, password);
       const { token, user } = response.data;
       // Store token and user via auth store
-      const { login } = require('@/src/store/authStore').useAuthStore.getState();
+      const { login } =
+        require("@/src/store/authStore").useAuthStore.getState();
       login(token, user);
 
       Toast.show({
-        type: 'success',
-        text1: 'Registration Complete',
-        text2: 'Welcome to MedStream!',
+        type: "success",
+        text1: "Registration Complete",
+        text2: "Welcome to FindMeds!",
       });
 
-      router.replace('/(tabs)');
+      router.replace("/(tabs)");
     } catch (error: any) {
-      console.error('Registration error:', error);
+      console.error("Registration error:", error);
       Toast.show({
-        type: 'error',
-        text1: 'Registration Failed',
-        text2: error.response?.data?.message || 'Failed to register',
+        type: "error",
+        text1: "Registration Failed",
+        text2: error.response?.data?.message || "Failed to register",
       });
     } finally {
       setLoading(false);
@@ -96,16 +102,17 @@ export default function RegisterScreen() {
   };
 
   const updateFormData = (field: string, value: string) => {
-    setFormData(prev => ({ ...prev, [field]: value }));
+    setFormData((prev) => ({ ...prev, [field]: value }));
     if (errors[field]) {
-      setErrors(prev => ({ ...prev, [field]: '' }));
+      setErrors((prev) => ({ ...prev, [field]: "" }));
     }
   };
 
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-      <View style={[styles.container, { backgroundColor: theme.colors.background }]}>
-        
+      <View
+        style={[styles.container, { backgroundColor: theme.colors.background }]}
+      >
         <KeyboardAwareScrollView
           style={styles.content}
           contentContainerStyle={styles.scrollContent}
@@ -119,16 +126,25 @@ export default function RegisterScreen() {
             <Text variant="headlineSmall" style={styles.title}>
               Create Account
             </Text>
-            <Text variant="bodyMedium" style={[styles.subtitle, { color: theme.colors.onSurfaceVariant }]}>
-              Join MedStream to find medicines easily
+            <Text
+              variant="bodyMedium"
+              style={[
+                styles.subtitle,
+                { color: theme.colors.onSurfaceVariant },
+              ]}
+            >
+              Join FindMeds to find medicines easily
             </Text>
           </Animated.View>
 
-          <Animated.View entering={FadeInDown.delay(400).duration(600)} style={styles.form}>
+          <Animated.View
+            entering={FadeInDown.delay(400).duration(600)}
+            style={styles.form}
+          >
             <TextInput
               label="Full Name *"
               value={formData.name}
-              onChangeText={(value) => updateFormData('name', value)}
+              onChangeText={(value) => updateFormData("name", value)}
               placeholder="Enter your full name"
               mode="outlined"
               error={!!errors.name}
@@ -142,7 +158,7 @@ export default function RegisterScreen() {
             <TextInput
               label="Phone Number *"
               value={formData.phone}
-              onChangeText={(value) => updateFormData('phone', value)}
+              onChangeText={(value) => updateFormData("phone", value)}
               placeholder="+2519xxxxxxxx"
               keyboardType="phone-pad"
               mode="outlined"
@@ -157,7 +173,7 @@ export default function RegisterScreen() {
             <TextInput
               label="Email *"
               value={formData.email}
-              onChangeText={(value) => updateFormData('email', value)}
+              onChangeText={(value) => updateFormData("email", value)}
               placeholder="Enter your email"
               keyboardType="email-address"
               autoCapitalize="none"
@@ -173,7 +189,7 @@ export default function RegisterScreen() {
             <TextInput
               label="Location *"
               value={formData.location}
-              onChangeText={(value) => updateFormData('location', value)}
+              onChangeText={(value) => updateFormData("location", value)}
               placeholder="Enter your city/town"
               mode="outlined"
               style={styles.input}
@@ -195,7 +211,7 @@ export default function RegisterScreen() {
               error={!!errors.password}
               right={
                 <TextInput.Icon
-                  icon={showPassword ? 'eye-off' : 'eye'}
+                  icon={showPassword ? "eye-off" : "eye"}
                   onPress={() => setShowPassword((prev) => !prev)}
                 />
               }
@@ -215,7 +231,7 @@ export default function RegisterScreen() {
               error={!!errors.confirmPassword}
               right={
                 <TextInput.Icon
-                  icon={showConfirmPassword ? 'eye-off' : 'eye'}
+                  icon={showConfirmPassword ? "eye-off" : "eye"}
                   onPress={() => setShowConfirmPassword((prev) => !prev)}
                 />
               }
@@ -236,12 +252,21 @@ export default function RegisterScreen() {
             </Button>
           </Animated.View>
 
-          <Animated.View entering={FadeInDown.delay(600).duration(600)} style={styles.footer}>
-            <Text variant="bodyMedium" style={[styles.footerText, { color: theme.colors.onSurfaceVariant }]}>
-              Already have an account?{' '}
-              <Text 
-                style={{ color: theme.colors.primary, fontWeight: '600' }}
-                onPress={() => router.push('/(auth)/login')}
+          <Animated.View
+            entering={FadeInDown.delay(600).duration(600)}
+            style={styles.footer}
+          >
+            <Text
+              variant="bodyMedium"
+              style={[
+                styles.footerText,
+                { color: theme.colors.onSurfaceVariant },
+              ]}
+            >
+              Already have an account?{" "}
+              <Text
+                style={{ color: theme.colors.primary, fontWeight: "600" }}
+                onPress={() => router.push("/(auth)/login")}
               >
                 Sign In
               </Text>
@@ -265,7 +290,7 @@ const styles = StyleSheet.create({
     paddingBottom: 40, // Extra padding for keyboard
   },
   title: {
-    fontWeight: 'bold',
+    fontWeight: "bold",
     marginTop: 32,
     marginBottom: 8,
   },
@@ -286,10 +311,10 @@ const styles = StyleSheet.create({
     paddingVertical: 8,
   },
   footer: {
-    alignItems: 'center',
+    alignItems: "center",
     paddingBottom: 32,
   },
   footerText: {
-    textAlign: 'center',
+    textAlign: "center",
   },
 });

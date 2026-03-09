@@ -1,67 +1,92 @@
-import React from 'react';
-import { View, StyleSheet, Dimensions } from 'react-native';
-import { Text, Button } from 'react-native-paper';
-import { router } from 'expo-router';
-import Animated, { FadeInDown, FadeInUp } from 'react-native-reanimated';
-import { MaterialCommunityIcons } from '@expo/vector-icons';
+import React from "react";
+import { View, StyleSheet, Dimensions } from "react-native";
+import { Text, Button } from "react-native-paper";
+import { router } from "expo-router";
+import Animated, { FadeInDown, FadeInUp } from "react-native-reanimated";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 
-import { theme } from '@/src/constants/theme';
+import { theme } from "@/src/constants/theme";
 
-const { width, height } = Dimensions.get('window');
+const { width, height } = Dimensions.get("window");
 
 export default function WelcomeScreen() {
   return (
-    <View style={[styles.container, { backgroundColor: theme.colors.background }]}>
-      <Animated.View 
+    <View
+      style={[styles.container, { backgroundColor: theme.colors.background }]}
+    >
+      <Animated.View
         entering={FadeInUp.delay(200).duration(800)}
         style={styles.header}
       >
-        <View style={[styles.iconContainer, { backgroundColor: theme.colors.primaryContainer }]}>
-          <MaterialCommunityIcons 
-            name="pill" 
-            size={80} 
-            color={theme.colors.primary} 
+        <View
+          style={[
+            styles.iconContainer,
+            { backgroundColor: theme.colors.primaryContainer },
+          ]}
+        >
+          <MaterialCommunityIcons
+            name="pill"
+            size={80}
+            color={theme.colors.primary}
           />
         </View>
-        <Text variant="headlineLarge" style={[styles.title, { color: '#fff' }]}>
-          MedStream
+        <Text
+          variant="headlineLarge"
+          style={[styles.title, { color: theme.colors.primary }]}
+        >
+          FindMeds
         </Text>
-        <Text variant="bodyLarge" style={[styles.subtitle, { color: theme.colors.onSurfaceVariant }]}>
+        <Text
+          variant="bodyLarge"
+          style={[styles.subtitle, { color: theme.colors.onSurfaceVariant }]}
+        >
           Find medicines from nearby pharmacies
         </Text>
       </Animated.View>
 
-      <Animated.View 
+      <Animated.View
         entering={FadeInDown.delay(400).duration(800)}
         style={styles.features}
       >
         <View style={styles.feature}>
-          <MaterialCommunityIcons name="map-search" size={32} color={theme.colors.primary} />
+          <MaterialCommunityIcons
+            name="map-search"
+            size={32}
+            color={theme.colors.primary}
+          />
           <Text variant="bodyMedium" style={styles.featureText}>
             Search nearby pharmacies
           </Text>
         </View>
         <View style={styles.feature}>
-          <MaterialCommunityIcons name="upload-box" size={32} color={theme.colors.primary} />
+          <MaterialCommunityIcons
+            name="upload-box"
+            size={32}
+            color={theme.colors.primary}
+          />
           <Text variant="bodyMedium" style={styles.featureText}>
             Upload Prescriptions
           </Text>
         </View>
         <View style={styles.feature}>
-          <MaterialCommunityIcons name="truck-delivery" size={32} color={theme.colors.primary} />
+          <MaterialCommunityIcons
+            name="truck-delivery"
+            size={32}
+            color={theme.colors.primary}
+          />
           <Text variant="bodyMedium" style={styles.featureText}>
-           Track realtime delivery
+            Track realtime delivery
           </Text>
         </View>
       </Animated.View>
 
-      <Animated.View 
+      <Animated.View
         entering={FadeInDown.delay(600).duration(800)}
         style={styles.buttons}
       >
         <Button
           mode="contained"
-          onPress={() => router.push('/(auth)/register')}
+          onPress={() => router.push("/(auth)/register")}
           style={styles.primaryButton}
           contentStyle={styles.buttonContent}
         >
@@ -69,7 +94,7 @@ export default function WelcomeScreen() {
         </Button>
         <Button
           mode="outlined"
-          onPress={() => router.push('/(auth)/login')}
+          onPress={() => router.push("/(auth)/login")}
           style={styles.secondaryButton}
           contentStyle={styles.buttonContent}
         >
@@ -88,34 +113,34 @@ const styles = StyleSheet.create({
   },
   header: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
   },
   iconContainer: {
     width: 120,
     height: 120,
     borderRadius: 60,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
     marginBottom: 24,
   },
   title: {
-    fontWeight: 'bold',
+    fontWeight: "bold",
     marginBottom: 8,
-    textAlign: 'center',
+    textAlign: "center",
   },
   subtitle: {
-    textAlign: 'center',
+    textAlign: "center",
     marginBottom: 32,
   },
   features: {
     flex: 1,
-    justifyContent: 'center',
+    justifyContent: "center",
     paddingVertical: 32,
   },
   feature: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     marginBottom: 24,
     paddingHorizontal: 16,
   },
@@ -133,10 +158,8 @@ const styles = StyleSheet.create({
   secondaryButton: {
     marginBottom: 8,
     borderRadius: 12,
-    color: "#fff"
   },
   buttonContent: {
     paddingVertical: 8,
-    color: "#fff"
   },
 });

@@ -1,8 +1,15 @@
-import Header from '@/src/components/Header';
-import { theme } from '@/src/constants/theme';
-import { notificationAPI } from '@/src/services/api';
-import React, { useState, useEffect } from 'react';
-import { View, Text, FlatList, TouchableOpacity, StyleSheet, ActivityIndicator } from 'react-native';
+import Header from "@/src/components/Header";
+import { theme } from "@/src/constants/theme";
+import { notificationAPI } from "@/src/services/api";
+import React, { useState, useEffect } from "react";
+import {
+  View,
+  Text,
+  FlatList,
+  TouchableOpacity,
+  StyleSheet,
+  ActivityIndicator,
+} from "react-native";
 
 interface Notification {
   _id: string;
@@ -28,7 +35,7 @@ export default function NotificationsScreen() {
       const response = await notificationAPI.getNotifications();
       setNotifications(response.data);
     } catch (error) {
-      console.error('Error fetching notifications:', error);
+      console.error("Error fetching notifications:", error);
     } finally {
       setLoading(false);
       setRefreshing(false);
@@ -39,9 +46,9 @@ export default function NotificationsScreen() {
     try {
       const response = await notificationAPI.getUnreadCount();
       setUnreadCount(response.data.count);
-      console.log('Unread count:', response.data.count);
+      console.log("Unread count:", response.data.count);
     } catch (error) {
-      console.error('Error fetching unread count:', error);
+      console.error("Error fetching unread count:", error);
     }
   };
 
@@ -49,15 +56,17 @@ export default function NotificationsScreen() {
     try {
       await notificationAPI.markAsRead(id);
       // Update local state
-      setNotifications(prevNotifications => 
-        prevNotifications.map(notification => 
-          notification._id === id ? { ...notification, isRead: true } : notification
-        )
+      setNotifications((prevNotifications) =>
+        prevNotifications.map((notification) =>
+          notification._id === id
+            ? { ...notification, isRead: true }
+            : notification,
+        ),
       );
       // Update unread count
-      setUnreadCount(prev => Math.max(0, prev - 1));
+      setUnreadCount((prev) => Math.max(0, prev - 1));
     } catch (error) {
-      console.error('Error marking notification as read:', error);
+      console.error("Error marking notification as read:", error);
     }
   };
 
@@ -65,15 +74,16 @@ export default function NotificationsScreen() {
     try {
       await notificationAPI.markAllAsRead();
       // Update all notifications to read
-      setNotifications(prevNotifications => 
-        prevNotifications.map(notification => 
-          ({ ...notification, isRead: true })
-        )
+      setNotifications((prevNotifications) =>
+        prevNotifications.map((notification) => ({
+          ...notification,
+          isRead: true,
+        })),
       );
       // Reset unread count
       setUnreadCount(0);
     } catch (error) {
-      console.error('Error marking all notifications as read:', error);
+      console.error("Error marking all notifications as read:", error);
     }
   };
 
@@ -84,8 +94,11 @@ export default function NotificationsScreen() {
   };
 
   const renderNotificationItem = ({ item }: { item: Notification }) => (
-    <TouchableOpacity 
-      style={[styles.notificationItem, !item.isRead && styles.unreadNotification]}
+    <TouchableOpacity
+      style={[
+        styles.notificationItem,
+        !item.isRead && styles.unreadNotification,
+      ]}
       onPress={() => !item.isRead && handleMarkAsRead(item._id)}
     >
       <View style={styles.notificationContent}>
@@ -112,14 +125,12 @@ export default function NotificationsScreen() {
       <Header title="Notifications" showBack />
       <View style={styles.container}>
         <View style={styles.header}>
-          
-            <TouchableOpacity 
-              onPress={handleMarkAllAsRead}
-              style={styles.markAllButton}
-            >
-              <Text style={styles.markAllText}>Mark all as read</Text>
-            </TouchableOpacity>
-        
+          <TouchableOpacity
+            onPress={handleMarkAllAsRead}
+            style={styles.markAllButton}
+          >
+            <Text style={styles.markAllText}>Mark all as read</Text>
+          </TouchableOpacity>
         </View>
 
         <FlatList
@@ -153,30 +164,30 @@ const styles = StyleSheet.create({
   },
   center: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
     marginTop: 20,
   },
   header: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
     padding: 15,
     backgroundColor: theme.colors.background,
     borderBottomWidth: 1,
-    borderBottomColor: '#eee',
+    borderBottomColor: theme.colors.outlineVariant,
   },
   headerText: {
     fontSize: 20,
-    fontWeight: 'bold',
+    fontWeight: "bold",
   },
   markAllButton: {
     padding: 5,
   },
   markAllText: {
-    color: '#1a73e8',
+    color: theme.colors.primary,
     fontSize: 14,
-    fontWeight: '500',
+    fontWeight: "500",
   },
   listContent: {
     paddingBottom: 20,
@@ -186,9 +197,9 @@ const styles = StyleSheet.create({
     padding: 15,
     marginBottom: 1,
     borderBottomWidth: 1,
-    borderBottomColor: '#eee',
-    flexDirection: 'row',
-    alignItems: 'center',
+    borderBottomColor: theme.colors.outlineVariant,
+    flexDirection: "row",
+    alignItems: "center",
   },
   notificationContent: {
     flex: 1,
@@ -198,37 +209,36 @@ const styles = StyleSheet.create({
   },
   notificationTitle: {
     fontSize: 16,
-    fontWeight: 'bold',
+    fontWeight: "bold",
     marginBottom: 5,
   },
   notificationMessage: {
     fontSize: 14,
-    color: '#555',
+    color: "#555",
     marginBottom: 5,
   },
   notificationDate: {
     fontSize: 12,
-    color: '#999',
+    color: "#999",
   },
   unreadDot: {
     width: 10,
     height: 10,
     borderRadius: 5,
-    backgroundColor: '#1a73e8',
+    backgroundColor: theme.colors.primary,
     marginLeft: 10,
   },
   unreadCountBadge: {
-    position: 'absolute',
+    position: "absolute",
     bottom: 20,
     right: 20,
-    backgroundColor: '#1a73e8',
+    backgroundColor: theme.colors.primary,
     borderRadius: 15,
     paddingHorizontal: 12,
     paddingVertical: 6,
   },
   unreadCountText: {
-    color: 'white',
+    color: "white",
     fontSize: 14,
   },
 });
-

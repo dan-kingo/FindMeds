@@ -1,11 +1,20 @@
-import React, { useState, useEffect } from 'react';
-import { View, StyleSheet, ScrollView, Alert, FlatList } from 'react-native';
-import { Button, TextInput, Text, ActivityIndicator, Card, IconButton, Modal, Portal } from 'react-native-paper';
-import { useRouter } from 'expo-router';
-import * as Location from 'expo-location';
-import { profileAPI } from '@/src/services/api';
-import Header from '@/src/components/Header';
-import { theme } from '@/src/constants/theme';
+import React, { useState, useEffect } from "react";
+import { View, StyleSheet, ScrollView, Alert, FlatList } from "react-native";
+import {
+  Button,
+  TextInput,
+  Text,
+  ActivityIndicator,
+  Card,
+  IconButton,
+  Modal,
+  Portal,
+} from "react-native-paper";
+import { useRouter } from "expo-router";
+import * as Location from "expo-location";
+import { profileAPI } from "@/src/services/api";
+import Header from "@/src/components/Header";
+import { theme } from "@/src/constants/theme";
 
 interface Address {
   _id: string;
@@ -20,22 +29,22 @@ const ManageAddressesScreen = () => {
   const router = useRouter();
   const [addresses, setAddresses] = useState<Address[]>([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState('');
+  const [error, setError] = useState("");
   const [modalVisible, setModalVisible] = useState(false);
   const [editMode, setEditMode] = useState(false);
   const [currentAddress, setCurrentAddress] = useState<Address | null>(null);
   const [locationLoading, setLocationLoading] = useState(false);
-  
+
   // Form state
-  const [label, setLabel] = useState('');
-  const [street, setStreet] = useState('');
-  const [city, setCity] = useState('');
-  const [latitude, setLatitude] = useState('');
-  const [longitude, setLongitude] = useState('');
+  const [label, setLabel] = useState("");
+  const [street, setStreet] = useState("");
+  const [city, setCity] = useState("");
+  const [latitude, setLatitude] = useState("");
+  const [longitude, setLongitude] = useState("");
   const [formErrors, setFormErrors] = useState({
-    label: '',
-    street: '',
-    city: '',
+    label: "",
+    street: "",
+    city: "",
   });
 
   useEffect(() => {
@@ -47,10 +56,10 @@ const ManageAddressesScreen = () => {
       setLoading(true);
       const response = await profileAPI.getAddresses();
       setAddresses(response.addresses || []);
-      setError('');
+      setError("");
     } catch (err) {
-      setError('Failed to load addresses');
-      console.error('Error fetching addresses:', err);
+      setError("Failed to load addresses");
+      console.error("Error fetching addresses:", err);
     } finally {
       setLoading(false);
     }
@@ -59,23 +68,23 @@ const ManageAddressesScreen = () => {
   const validateForm = () => {
     let valid = true;
     const errors = {
-      label: '',
-      street: '',
-      city: '',
+      label: "",
+      street: "",
+      city: "",
     };
 
     if (!label.trim()) {
-      errors.label = 'Label is required';
+      errors.label = "Label is required";
       valid = false;
     }
 
     if (!street.trim()) {
-      errors.street = 'Street address is required';
+      errors.street = "Street address is required";
       valid = false;
     }
 
     if (!city.trim()) {
-      errors.city = 'City is required';
+      errors.city = "City is required";
       valid = false;
     }
 
@@ -84,17 +93,17 @@ const ManageAddressesScreen = () => {
   };
 
   const resetForm = () => {
-    setLabel('');
-    setStreet('');
-    setCity('');
-    setLatitude('');
-    setLongitude('');
+    setLabel("");
+    setStreet("");
+    setCity("");
+    setLatitude("");
+    setLongitude("");
     setCurrentAddress(null);
     setEditMode(false);
     setFormErrors({
-      label: '',
-      street: '',
-      city: '',
+      label: "",
+      street: "",
+      city: "",
     });
   };
 
@@ -105,25 +114,27 @@ const ManageAddressesScreen = () => {
       label,
       street,
       city,
-      ...(latitude && !isNaN(parseFloat(latitude)) && { latitude: parseFloat(latitude) }),
-      ...(longitude && !isNaN(parseFloat(longitude)) && { longitude: parseFloat(longitude) }),
+      ...(latitude &&
+        !isNaN(parseFloat(latitude)) && { latitude: parseFloat(latitude) }),
+      ...(longitude &&
+        !isNaN(parseFloat(longitude)) && { longitude: parseFloat(longitude) }),
     };
 
     try {
       setLoading(true);
       if (editMode && currentAddress) {
         await profileAPI.updateAddress(currentAddress._id, addressData);
-        Alert.alert('Success', 'Address updated successfully');
+        Alert.alert("Success", "Address updated successfully");
       } else {
         await profileAPI.addAddress(addressData);
-        Alert.alert('Success', 'Address added successfully');
+        Alert.alert("Success", "Address added successfully");
       }
       fetchAddresses();
       setModalVisible(false);
       resetForm();
     } catch (err) {
-      console.error('Error saving address:', err);
-      Alert.alert('Error', 'Failed to save address. Please try again.');
+      console.error("Error saving address:", err);
+      Alert.alert("Error", "Failed to save address. Please try again.");
     } finally {
       setLoading(false);
     }
@@ -131,30 +142,33 @@ const ManageAddressesScreen = () => {
 
   const handleDelete = async (id: string) => {
     Alert.alert(
-      'Confirm Delete',
-      'Are you sure you want to delete this address?',
+      "Confirm Delete",
+      "Are you sure you want to delete this address?",
       [
         {
-          text: 'Cancel',
-          style: 'cancel',
+          text: "Cancel",
+          style: "cancel",
         },
         {
-          text: 'Delete',
-          style: 'destructive',
+          text: "Delete",
+          style: "destructive",
           onPress: async () => {
             try {
               setLoading(true);
               await profileAPI.deleteAddress(id);
               fetchAddresses();
             } catch (err) {
-              console.error('Error deleting address:', err);
-              Alert.alert('Error', 'Failed to delete address. Please try again.');
+              console.error("Error deleting address:", err);
+              Alert.alert(
+                "Error",
+                "Failed to delete address. Please try again.",
+              );
             } finally {
               setLoading(false);
             }
           },
         },
-      ]
+      ],
     );
   };
 
@@ -163,8 +177,8 @@ const ManageAddressesScreen = () => {
     setLabel(address.label);
     setStreet(address.street);
     setCity(address.city);
-    setLatitude(address.latitude?.toString() || '');
-    setLongitude(address.longitude?.toString() || '');
+    setLatitude(address.latitude?.toString() || "");
+    setLongitude(address.longitude?.toString() || "");
     setEditMode(true);
     setModalVisible(true);
   };
@@ -178,15 +192,18 @@ const ManageAddressesScreen = () => {
     try {
       setLocationLoading(true);
       let { status } = await Location.requestForegroundPermissionsAsync();
-      if (status !== 'granted') {
-        Alert.alert('Permission denied', 'Location permission is required to get your current location');
+      if (status !== "granted") {
+        Alert.alert(
+          "Permission denied",
+          "Location permission is required to get your current location",
+        );
         return;
       }
 
       let location = await Location.getCurrentPositionAsync({});
       setLatitude(location.coords.latitude.toString());
       setLongitude(location.coords.longitude.toString());
-      
+
       // Optionally reverse geocode to get address details
       const geocode = await Location.reverseGeocodeAsync({
         latitude: location.coords.latitude,
@@ -198,13 +215,13 @@ const ManageAddressesScreen = () => {
         setStreet(
           [firstResult.name, firstResult.street, firstResult.streetNumber]
             .filter(Boolean)
-            .join(' ') || ''
+            .join(" ") || "",
         );
-        setCity(firstResult.city || firstResult.region || '');
+        setCity(firstResult.city || firstResult.region || "");
       }
     } catch (error) {
-      console.error('Error getting location:', error);
-      Alert.alert('Error', 'Failed to get current location');
+      console.error("Error getting location:", error);
+      Alert.alert("Error", "Failed to get current location");
     } finally {
       setLocationLoading(false);
     }
@@ -218,7 +235,6 @@ const ManageAddressesScreen = () => {
             {item.label}
           </Text>
           <View style={styles.addressActions}>
-          
             <IconButton
               icon="delete"
               size={20}
@@ -248,7 +264,7 @@ const ManageAddressesScreen = () => {
   return (
     <>
       <Header title="Manage Addresses" showBack />
-      
+
       <View style={styles.container}>
         {error ? (
           <Text style={styles.errorText}>{error}</Text>
@@ -283,9 +299,9 @@ const ManageAddressesScreen = () => {
             contentContainerStyle={styles.modalContent}
           >
             <Text variant="titleLarge" style={styles.modalTitle}>
-              {editMode ? 'Edit Address' : 'Add New Address'}
+              {editMode ? "Edit Address" : "Add New Address"}
             </Text>
-            
+
             <ScrollView>
               <TextInput
                 label="Label (e.g., Home, Work)"
@@ -372,7 +388,7 @@ const ManageAddressesScreen = () => {
                   disabled={loading}
                   style={styles.submitButton}
                 >
-                  {editMode ? 'Update' : 'Save'}
+                  {editMode ? "Update" : "Save"}
                 </Button>
               </View>
             </ScrollView>
@@ -391,8 +407,8 @@ const styles = StyleSheet.create({
   },
   loader: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
     backgroundColor: theme.colors.background,
   },
   listContent: {
@@ -404,16 +420,16 @@ const styles = StyleSheet.create({
     backgroundColor: theme.colors.background,
   },
   addressHeader: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
     marginBottom: 8,
   },
   addressLabel: {
-    fontWeight: 'bold',
+    fontWeight: "bold",
   },
   addressActions: {
-    flexDirection: 'row',
+    flexDirection: "row",
   },
   addButton: {
     marginTop: 8,
@@ -425,23 +441,23 @@ const styles = StyleSheet.create({
     padding: 20,
     margin: 20,
     borderRadius: 8,
-    maxHeight: '80%',
+    maxHeight: "80%",
   },
   modalTitle: {
     marginBottom: 16,
-    textAlign: 'center',
-    fontWeight: 'bold',
+    textAlign: "center",
+    fontWeight: "bold",
   },
   input: {
     marginBottom: 8,
-    backgroundColor: 'transparent',
+    backgroundColor: "transparent",
   },
   locationInput: {
     flex: 1,
   },
   locationContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
+    flexDirection: "row",
+    justifyContent: "space-between",
     gap: 8,
     marginBottom: 8,
   },
@@ -449,35 +465,35 @@ const styles = StyleSheet.create({
     marginBottom: 16,
   },
   error: {
-    color: 'red',
+    color: "red",
     marginBottom: 12,
     marginLeft: 4,
     fontSize: 12,
   },
   modalButtons: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
+    flexDirection: "row",
+    justifyContent: "space-between",
     marginTop: 16,
   },
   cancelButton: {
     flex: 1,
     marginRight: 8,
-    borderColor: '#6200ee',
+    borderColor: theme.colors.primary,
   },
   submitButton: {
     flex: 1,
     marginLeft: 8,
-    backgroundColor: '#6200ee',
+    backgroundColor: theme.colors.primary,
   },
   errorText: {
-    color: 'red',
-    textAlign: 'center',
+    color: "red",
+    textAlign: "center",
     marginTop: 16,
   },
   emptyText: {
-    textAlign: 'center',
+    textAlign: "center",
     marginTop: 16,
-    color: '#666',
+    color: "#666",
   },
 });
 

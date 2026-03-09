@@ -1,11 +1,11 @@
 {
   "expo": {
-    "name": "MedStream",
+    "name": "FindMeds",
     "slug": "patient",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/images/medstream.png",
-    "scheme": "medstream",
+    "icon": "./assets/images/findmeds.png",
+    "scheme": "findmeds",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "ios": {
@@ -13,7 +13,7 @@
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/images/medstream.png",
+        "foregroundImage": "./assets/images/findmeds.png",
         "backgroundColor": "#ffffff"
       },
       "edgeToEdgeEnabled": true,
@@ -34,7 +34,7 @@
       [
         "expo-splash-screen",
         {
-          "image": "./assets/images/medstream.png",
+          "image": "./assets/images/findmeds.png",
           "imageWidth": 200,
           "resizeMode": "contain",
           "backgroundColor": "#ffffff"

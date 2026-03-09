@@ -1,68 +1,46 @@
-import { MD3DarkTheme } from 'react-native-paper';
+import { MD3LightTheme } from "react-native-paper";
 
 export const theme = {
-  ...MD3DarkTheme,
+  ...MD3LightTheme,
 
   colors: {
-    ...MD3DarkTheme.colors,
-
-    /* 🔵 PRIMARY — Electric Blue */
-    primary: '#4C7CF5',
-    primaryContainer: '#1C2A52',
-    onPrimary: '#EAF0FF',
-    onPrimaryContainer: '#AFC4FF',
-
-    /* 🟧 SECONDARY — Warm Amber */
-    secondary: '#F5A623',
-    secondaryContainer: '#4A3415',
-    onSecondary: '#FFF4D6',
-    onSecondaryContainer: '#FFD08C',
-
-    /* 🟢 TERTIARY — Mint Green */
-    tertiary: '#7CF5C6',
-    tertiaryContainer: '#1C3A32',
-    onTertiary: '#003329',
-    onTertiaryContainer: '#B7FFEA',
-
-    /* ⚠ FEEDBACK COLORS */
-    error: '#FF5C5C',
-    errorContainer: '#4A1C1C',
-    success: '#1CCF8A',
-    warning: '#FFD54A',
-    info: '#69A7FF',
-
-    /* 🌑 DARK SURFACES */
-    background: '#0B0F19',        // deep navy-black
-    onBackground: '#EAF0FF',
-
-    surface: '#151A28',           // card surfaces
-    onSurface: '#DFE6FF',
-
-    surfaceVariant: '#1E2535',
-    onSurfaceVariant: '#A8B0C6',
-
-    /* 🧱 ELEVATION LEVELS */
+    ...MD3LightTheme.colors,
+    primary: "#ea580c",
+    primaryContainer: "#ffedd5",
+    onPrimary: "#ffffff",
+    onPrimaryContainer: "#7c2d12",
+    secondary: "#14946d",
+    secondaryContainer: "#d8faea",
+    onSecondary: "#ffffff",
+    onSecondaryContainer: "#124d3c",
+    tertiary: "#ca8a04",
+    tertiaryContainer: "#fef9c3",
+    onTertiary: "#ffffff",
+    onTertiaryContainer: "#713f12",
+    error: "#e11d48",
+    errorContainer: "#ffe4e6",
+    success: "#1eb885",
+    warning: "#eab308",
+    info: "#0ea5e9",
+    background: "#fff7ed",
+    onBackground: "#0f172a",
+    surface: "#fffbeb",
+    onSurface: "#0f172a",
+    surfaceVariant: "#fef3c7",
+    onSurfaceVariant: "#475569",
     elevation: {
-      level0: 'transparent',
-      level1: '#121726',
-      level2: '#161C2D',
-      level3: '#1A2134',
-      level4: '#1E263B',
-      level5: '#232B43',
+      level0: "transparent",
+      level1: "#fffaf0",
+      level2: "#fff5e6",
+      level3: "#ffedd5",
+      level4: "#fee2b9",
+      level5: "#fed7aa",
     },
-
-    /* 🔲 OUTLINES & BORDERS */
-    outline: '#3E455A',
-    outlineVariant: '#2A3042',
-
-    /* 🌫 BACKDROP */
-    backdrop: 'rgba(76, 124, 245, 0.12)',
-
-    /* ✨ OTHER SEMANTIC COLORS */
-    shadow: '#000000',
-    scrim: '#000000',
+    outline: "#cbd5e1",
+    outlineVariant: "#e2e8f0",
+    backdrop: "rgba(20, 148, 109, 0.12)",
+    shadow: "#000000",
+    scrim: "#000000",
   },
-
-  /* 🔘 ROUNDED UI STYLE */
   roundness: 14,
 };
