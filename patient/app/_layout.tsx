@@ -47,7 +47,7 @@ export default function RootLayout() {
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
       <PaperProvider theme={theme}>
-        <StatusBar style="dark" backgroundColor={theme.colors.background} />
+        <StatusBar style="light" backgroundColor={theme.colors.background} />
         <SafeAreaView
           style={{ flex: 1, backgroundColor: theme.colors.background }}
         >

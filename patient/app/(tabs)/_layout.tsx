@@ -1,14 +1,26 @@
-import React from 'react';
-import { Tabs } from 'expo-router';
-import { MaterialCommunityIcons } from '@expo/vector-icons';
-import Animated, { useSharedValue, useAnimatedStyle, withSpring } from 'react-native-reanimated';
+import React from "react";
+import { Tabs } from "expo-router";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
+import Animated, {
+  useSharedValue,
+  useAnimatedStyle,
+  withSpring,
+} from "react-native-reanimated";
 
-import { theme } from '@/src/constants/theme';
-import { useCartStore } from '@/src/store/cartStore';
+import { theme } from "@/src/constants/theme";
+import { useCartStore } from "@/src/store/cartStore";
 
-function TabBarIcon({ name, color, focused }: { name: any; color: string; focused: boolean }) {
+function TabBarIcon({
+  name,
+  color,
+  focused,
+}: {
+  name: any;
+  color: string;
+  focused: boolean;
+}) {
   const scale = useSharedValue(focused ? 1.2 : 1);
-  
+
   const animatedStyle = useAnimatedStyle(() => {
     scale.value = withSpring(focused ? 1.2 : 1);
     return {
@@ -34,31 +46,48 @@ export default function TabLayout() {
         tabBarInactiveTintColor: theme.colors.onSurfaceVariant,
         headerShown: false,
         tabBarStyle: {
-          backgroundColor: theme.colors.surface,
-          borderTopColor: theme.colors.outline,
-          height: 60,
-          paddingBottom: 8,
-          paddingTop: 8,
+          backgroundColor: "rgba(23, 33, 43, 0.78)",
+          borderColor: "rgba(160, 196, 255, 0.14)",
+          borderWidth: 1,
+          height: 74,
+          paddingBottom: 10,
+          paddingTop: 10,
+          marginHorizontal: 12,
+          marginBottom: 12,
+          borderRadius: 20,
+          position: "absolute",
+          elevation: 6,
+          shadowColor: "#000",
+          shadowOffset: { width: 0, height: 6 },
+          shadowOpacity: 0.28,
+          shadowRadius: 16,
         },
         tabBarLabelStyle: {
           fontSize: 12,
-          fontWeight: '500',
+          fontWeight: "500",
+        },
+        tabBarItemStyle: {
+          borderRadius: 12,
         },
       }}
     >
       <Tabs.Screen
         name="index"
         options={{
-          title: 'Home',
+          title: "Home",
           tabBarIcon: ({ color, focused }) => (
-            <TabBarIcon name={focused ? 'home' : 'home-outline'} color={color} focused={focused} />
+            <TabBarIcon
+              name={focused ? "home" : "home-outline"}
+              color={color}
+              focused={focused}
+            />
           ),
         }}
       />
       <Tabs.Screen
         name="search"
         options={{
-          title: 'Search',
+          title: "Search",
           tabBarIcon: ({ color, focused }) => (
             <TabBarIcon name="magnify" color={color} focused={focused} />
           ),
@@ -67,28 +96,40 @@ export default function TabLayout() {
       <Tabs.Screen
         name="cart"
         options={{
-          title: 'Cart',
+          title: "Cart",
           tabBarBadge: cartItemCount > 0 ? cartItemCount : undefined,
           tabBarIcon: ({ color, focused }) => (
-            <TabBarIcon name={focused ? 'cart' : 'cart-outline'} color={color} focused={focused} />
+            <TabBarIcon
+              name={focused ? "cart" : "cart-outline"}
+              color={color}
+              focused={focused}
+            />
           ),
         }}
       />
       <Tabs.Screen
         name="orders"
         options={{
-          title: 'Orders',
+          title: "Orders",
           tabBarIcon: ({ color, focused }) => (
-            <TabBarIcon name={focused ? 'package-variant' : 'package-variant-closed'} color={color} focused={focused} />
+            <TabBarIcon
+              name={focused ? "package-variant" : "package-variant-closed"}
+              color={color}
+              focused={focused}
+            />
           ),
         }}
       />
       <Tabs.Screen
         name="profile"
         options={{
-          title: 'Profile',
+          title: "Profile",
           tabBarIcon: ({ color, focused }) => (
-            <TabBarIcon name={focused ? 'account' : 'account-outline'} color={color} focused={focused} />
+            <TabBarIcon
+              name={focused ? "account" : "account-outline"}
+              color={color}
+              focused={focused}
+            />
           ),
         }}
       />

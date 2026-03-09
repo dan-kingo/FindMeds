@@ -8,6 +8,7 @@ import Toast from "react-native-toast-message";
 
 import { theme } from "@/src/constants/theme";
 import Header from "@/src/components/Header";
+import ScreenBackground from "@/src/components/ScreenBackground";
 import { useAuthStore } from "@/src/store/authStore";
 import { notificationAPI, profileAPI } from "@/src/services/api";
 
@@ -123,164 +124,164 @@ export default function ProfileScreen() {
   ];
 
   return (
-    <View
-      style={[styles.container, { backgroundColor: theme.colors.background }]}
-    >
-      <Header
-        title="Profile"
-        actions={[
-          <View key="notifications" style={{ position: "relative" }}>
-            <MaterialCommunityIcons
-              name="bell-outline"
-              size={32}
-              color={theme.colors.onSurface}
-              onPress={() => router.push("/notifications")}
-            />
-            {unreadCount > 0 && (
-              <View style={styles.badge}>
-                <Text style={styles.badgeText}>
-                  {unreadCount > 9 ? "9+" : unreadCount}
-                </Text>
-              </View>
-            )}
-          </View>,
-        ]}
-      />
-
-      <ScrollView style={styles.content} showsVerticalScrollIndicator={false}>
-        {/* User Info Card */}
-        <Animated.View entering={FadeInDown.delay(200).duration(600)}>
-          <Card style={styles.userCard}>
-            <Card.Content>
-              <View style={styles.userInfo}>
-                <View style={styles.avatar}>
-                  <MaterialCommunityIcons
-                    name="account"
-                    size={48}
-                    color={theme.colors.primary}
-                  />
-                </View>
-                <View style={styles.userDetails}>
-                  <Text variant="headlineSmall" style={styles.userName}>
-                    {user?.name || "User"}
+    <ScreenBackground>
+      <View style={styles.container}>
+        <Header
+          title="Profile"
+          actions={[
+            <View key="notifications" style={{ position: "relative" }}>
+              <MaterialCommunityIcons
+                name="bell-outline"
+                size={32}
+                color={theme.colors.onSurface}
+                onPress={() => router.push("/notifications")}
+              />
+              {unreadCount > 0 && (
+                <View style={styles.badge}>
+                  <Text style={styles.badgeText}>
+                    {unreadCount > 9 ? "9+" : unreadCount}
                   </Text>
-                  <Text variant="bodyMedium" style={styles.userPhone}>
-                    {user?.phone}
-                  </Text>
-                  {user?.email && (
-                    <Text variant="bodySmall" style={styles.userEmail}>
-                      {user.email}
-                    </Text>
-                  )}
-                  {user?.location && (
-                    <Text variant="bodySmall" style={styles.userLocation}>
-                      📍 {user.location}
-                    </Text>
-                  )}
                 </View>
-              </View>
-              <Button
-                mode="outlined"
-                onPress={handleEditProfile}
-                style={styles.editButton}
-              >
-                Edit Profile
-              </Button>
-            </Card.Content>
-          </Card>
-        </Animated.View>
+              )}
+            </View>,
+          ]}
+        />
 
-        {/* Settings Sections */}
-        {profileSections.map((section, sectionIndex) => (
-          <Animated.View
-            key={section.title}
-            entering={FadeInDown.delay((sectionIndex + 1) * 200 + 400).duration(
-              600,
-            )}
-          >
-            <Card style={styles.sectionCard}>
+        <ScrollView style={styles.content} showsVerticalScrollIndicator={false}>
+          {/* User Info Card */}
+          <Animated.View entering={FadeInDown.delay(200).duration(600)}>
+            <Card style={styles.userCard}>
               <Card.Content>
-                <Text variant="titleMedium" style={styles.sectionTitle}>
-                  {section.title}
-                </Text>
-                {section.items.map((item, itemIndex) => (
-                  <View key={item.title}>
-                    <List.Item
-                      title={item.title}
-                      description={item.description}
-                      left={(props) => (
-                        <List.Icon
-                          {...props}
-                          icon={item.icon}
-                          color={theme.colors.primary}
-                        />
-                      )}
-                      right={(props) => (
-                        <List.Icon {...props} icon="chevron-right" />
-                      )}
-                      onPress={item.onPress}
-                      style={styles.listItem}
+                <View style={styles.userInfo}>
+                  <View style={styles.avatar}>
+                    <MaterialCommunityIcons
+                      name="account"
+                      size={48}
+                      color={theme.colors.primary}
                     />
-                    {itemIndex < section.items.length - 1 && (
-                      <Divider style={styles.divider} />
+                  </View>
+                  <View style={styles.userDetails}>
+                    <Text variant="headlineSmall" style={styles.userName}>
+                      {user?.name || "User"}
+                    </Text>
+                    <Text variant="bodyMedium" style={styles.userPhone}>
+                      {user?.phone}
+                    </Text>
+                    {user?.email && (
+                      <Text variant="bodySmall" style={styles.userEmail}>
+                        {user.email}
+                      </Text>
+                    )}
+                    {user?.location && (
+                      <Text variant="bodySmall" style={styles.userLocation}>
+                        📍 {user.location}
+                      </Text>
                     )}
                   </View>
-                ))}
+                </View>
+                <Button
+                  mode="outlined"
+                  onPress={handleEditProfile}
+                  style={styles.editButton}
+                >
+                  Edit Profile
+                </Button>
               </Card.Content>
             </Card>
           </Animated.View>
-        ))}
 
-        {/* Notifications Setting */}
-        <Animated.View entering={FadeInDown.delay(1000).duration(600)}>
-          <Card style={styles.sectionCard}>
-            <Card.Content>
-              <Text variant="titleMedium" style={styles.sectionTitle}>
-                Preferences
-              </Text>
-              <List.Item
-                title="Push Notifications"
-                description="Receive order updates and promotions"
-                left={(props) => (
-                  <List.Icon
-                    {...props}
-                    icon="bell-outline"
-                    color={theme.colors.primary}
-                  />
-                )}
-                right={() => (
-                  <Switch
-                    value={notificationsEnabled}
-                    onValueChange={setNotificationsEnabled}
-                  />
-                )}
-                style={styles.listItem}
-              />
-            </Card.Content>
-          </Card>
-        </Animated.View>
+          {/* Settings Sections */}
+          {profileSections.map((section, sectionIndex) => (
+            <Animated.View
+              key={section.title}
+              entering={FadeInDown.delay(
+                (sectionIndex + 1) * 200 + 400,
+              ).duration(600)}
+            >
+              <Card style={styles.sectionCard}>
+                <Card.Content>
+                  <Text variant="titleMedium" style={styles.sectionTitle}>
+                    {section.title}
+                  </Text>
+                  {section.items.map((item, itemIndex) => (
+                    <View key={item.title}>
+                      <List.Item
+                        title={item.title}
+                        description={item.description}
+                        left={(props) => (
+                          <List.Icon
+                            {...props}
+                            icon={item.icon}
+                            color={theme.colors.primary}
+                          />
+                        )}
+                        right={(props) => (
+                          <List.Icon {...props} icon="chevron-right" />
+                        )}
+                        onPress={item.onPress}
+                        style={styles.listItem}
+                      />
+                      {itemIndex < section.items.length - 1 && (
+                        <Divider style={styles.divider} />
+                      )}
+                    </View>
+                  ))}
+                </Card.Content>
+              </Card>
+            </Animated.View>
+          ))}
 
-        {/* Sign Out Button */}
-        <Animated.View entering={FadeInDown.delay(1200).duration(600)}>
-          <Button
-            mode="outlined"
-            onPress={handleLogout}
-            style={styles.signOutButton}
-            textColor={theme.colors.error}
-            icon="logout"
-          >
-            Sign Out
-          </Button>
-        </Animated.View>
+          {/* Notifications Setting */}
+          <Animated.View entering={FadeInDown.delay(1000).duration(600)}>
+            <Card style={styles.sectionCard}>
+              <Card.Content>
+                <Text variant="titleMedium" style={styles.sectionTitle}>
+                  Preferences
+                </Text>
+                <List.Item
+                  title="Push Notifications"
+                  description="Receive order updates and promotions"
+                  left={(props) => (
+                    <List.Icon
+                      {...props}
+                      icon="bell-outline"
+                      color={theme.colors.primary}
+                    />
+                  )}
+                  right={() => (
+                    <Switch
+                      value={notificationsEnabled}
+                      onValueChange={setNotificationsEnabled}
+                    />
+                  )}
+                  style={styles.listItem}
+                />
+              </Card.Content>
+            </Card>
+          </Animated.View>
 
-        {/* App Version */}
-        <Animated.View entering={FadeInDown.delay(1400).duration(600)}>
-          <Text variant="bodySmall" style={styles.versionText}>
-            FindMeds v1.0.0
-          </Text>
-        </Animated.View>
-      </ScrollView>
-    </View>
+          {/* Sign Out Button */}
+          <Animated.View entering={FadeInDown.delay(1200).duration(600)}>
+            <Button
+              mode="outlined"
+              onPress={handleLogout}
+              style={styles.signOutButton}
+              textColor={theme.colors.error}
+              icon="logout"
+            >
+              Sign Out
+            </Button>
+          </Animated.View>
+
+          {/* App Version */}
+          <Animated.View entering={FadeInDown.delay(1400).duration(600)}>
+            <Text variant="bodySmall" style={styles.versionText}>
+              FindMeds v1.0.0
+            </Text>
+          </Animated.View>
+        </ScrollView>
+      </View>
+    </ScreenBackground>
   );
 }
 
@@ -295,7 +296,10 @@ const styles = StyleSheet.create({
   },
   userCard: {
     marginBottom: 16,
-    borderRadius: 12,
+    borderRadius: 14,
+    borderWidth: 1,
+    borderColor: "rgba(160,196,255,0.16)",
+    backgroundColor: "rgba(23,33,43,0.72)",
   },
   userInfo: {
     flexDirection: "row",
@@ -350,7 +354,10 @@ const styles = StyleSheet.create({
   },
   sectionCard: {
     marginBottom: 16,
-    borderRadius: 12,
+    borderRadius: 14,
+    borderWidth: 1,
+    borderColor: "rgba(160,196,255,0.16)",
+    backgroundColor: "rgba(23,33,43,0.72)",
   },
   sectionTitle: {
     fontWeight: "600",

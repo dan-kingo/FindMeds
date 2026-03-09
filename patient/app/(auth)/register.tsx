@@ -5,7 +5,7 @@ import {
   TouchableWithoutFeedback,
   Keyboard,
 } from "react-native";
-import { Text, TextInput, Button, HelperText } from "react-native-paper";
+import { Text, TextInput, Button, HelperText, Card } from "react-native-paper";
 import { router } from "expo-router";
 import Animated, { FadeInDown } from "react-native-reanimated";
 import Toast from "react-native-toast-message";
@@ -13,7 +13,7 @@ import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view
 
 import { theme } from "@/src/constants/theme";
 import { authAPI } from "@/src/services/api";
-import Header from "@/src/components/Header";
+import ScreenBackground from "@/src/components/ScreenBackground";
 
 export default function RegisterScreen() {
   const [formData, setFormData] = useState({
@@ -110,9 +110,7 @@ export default function RegisterScreen() {
 
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-      <View
-        style={[styles.container, { backgroundColor: theme.colors.background }]}
-      >
+      <ScreenBackground>
         <KeyboardAwareScrollView
           style={styles.content}
           contentContainerStyle={styles.scrollContent}
@@ -123,7 +121,7 @@ export default function RegisterScreen() {
           showsVerticalScrollIndicator={false}
         >
           <Animated.View entering={FadeInDown.delay(200).duration(600)}>
-            <Text variant="headlineSmall" style={styles.title}>
+            <Text variant="headlineMedium" style={styles.title}>
               Create Account
             </Text>
             <Text
@@ -139,117 +137,121 @@ export default function RegisterScreen() {
 
           <Animated.View
             entering={FadeInDown.delay(400).duration(600)}
-            style={styles.form}
+            style={styles.formWrap}
           >
-            <TextInput
-              label="Full Name *"
-              value={formData.name}
-              onChangeText={(value) => updateFormData("name", value)}
-              placeholder="Enter your full name"
-              mode="outlined"
-              error={!!errors.name}
-              style={styles.input}
-              returnKeyType="next"
-            />
-            <HelperText type="error" visible={!!errors.name}>
-              {errors.name}
-            </HelperText>
-
-            <TextInput
-              label="Phone Number *"
-              value={formData.phone}
-              onChangeText={(value) => updateFormData("phone", value)}
-              placeholder="+2519xxxxxxxx"
-              keyboardType="phone-pad"
-              mode="outlined"
-              error={!!errors.phone}
-              style={styles.input}
-              returnKeyType="next"
-            />
-            <HelperText type="error" visible={!!errors.phone}>
-              {errors.phone}
-            </HelperText>
-
-            <TextInput
-              label="Email *"
-              value={formData.email}
-              onChangeText={(value) => updateFormData("email", value)}
-              placeholder="Enter your email"
-              keyboardType="email-address"
-              autoCapitalize="none"
-              mode="outlined"
-              style={styles.input}
-              returnKeyType="next"
-              error={!!errors.email}
-            />
-            <HelperText type="error" visible={!!errors.email}>
-              {errors.email}
-            </HelperText>
-
-            <TextInput
-              label="Location *"
-              value={formData.location}
-              onChangeText={(value) => updateFormData("location", value)}
-              placeholder="Enter your city/town"
-              mode="outlined"
-              style={styles.input}
-              returnKeyType="done"
-              error={!!errors.location}
-            />
-            <HelperText type="error" visible={!!errors.location}>
-              {errors.location}
-            </HelperText>
-
-            <TextInput
-              label="Password *"
-              value={password}
-              onChangeText={setPassword}
-              placeholder="Enter at least 6 characters"
-              secureTextEntry={!showPassword}
-              mode="outlined"
-              style={styles.input}
-              error={!!errors.password}
-              right={
-                <TextInput.Icon
-                  icon={showPassword ? "eye-off" : "eye"}
-                  onPress={() => setShowPassword((prev) => !prev)}
+            <Card style={styles.formCard}>
+              <Card.Content style={styles.form}>
+                <TextInput
+                  label="Full Name *"
+                  value={formData.name}
+                  onChangeText={(value) => updateFormData("name", value)}
+                  placeholder="Enter your full name"
+                  mode="outlined"
+                  error={!!errors.name}
+                  style={styles.input}
+                  returnKeyType="next"
                 />
-              }
-            />
-            <HelperText type="error" visible={!!errors.password}>
-              {errors.password}
-            </HelperText>
+                <HelperText type="error" visible={!!errors.name}>
+                  {errors.name}
+                </HelperText>
 
-            <TextInput
-              label="Confirm Password *"
-              value={confirmPassword}
-              onChangeText={setConfirmPassword}
-              placeholder="Re-enter your password"
-              secureTextEntry={!showConfirmPassword}
-              mode="outlined"
-              style={styles.input}
-              error={!!errors.confirmPassword}
-              right={
-                <TextInput.Icon
-                  icon={showConfirmPassword ? "eye-off" : "eye"}
-                  onPress={() => setShowConfirmPassword((prev) => !prev)}
+                <TextInput
+                  label="Phone Number *"
+                  value={formData.phone}
+                  onChangeText={(value) => updateFormData("phone", value)}
+                  placeholder="+2519xxxxxxxx"
+                  keyboardType="phone-pad"
+                  mode="outlined"
+                  error={!!errors.phone}
+                  style={styles.input}
+                  returnKeyType="next"
                 />
-              }
-            />
-            <HelperText type="error" visible={!!errors.confirmPassword}>
-              {errors.confirmPassword}
-            </HelperText>
+                <HelperText type="error" visible={!!errors.phone}>
+                  {errors.phone}
+                </HelperText>
 
-            <Button
-              mode="contained"
-              onPress={handleRegister}
-              loading={loading}
-              disabled={loading}
-              style={styles.continueButton}
-              contentStyle={styles.buttonContent}
-            >
-              Continue
-            </Button>
+                <TextInput
+                  label="Email *"
+                  value={formData.email}
+                  onChangeText={(value) => updateFormData("email", value)}
+                  placeholder="Enter your email"
+                  keyboardType="email-address"
+                  autoCapitalize="none"
+                  mode="outlined"
+                  style={styles.input}
+                  returnKeyType="next"
+                  error={!!errors.email}
+                />
+                <HelperText type="error" visible={!!errors.email}>
+                  {errors.email}
+                </HelperText>
+
+                <TextInput
+                  label="Location *"
+                  value={formData.location}
+                  onChangeText={(value) => updateFormData("location", value)}
+                  placeholder="Enter your city/town"
+                  mode="outlined"
+                  style={styles.input}
+                  returnKeyType="done"
+                  error={!!errors.location}
+                />
+                <HelperText type="error" visible={!!errors.location}>
+                  {errors.location}
+                </HelperText>
+
+                <TextInput
+                  label="Password *"
+                  value={password}
+                  onChangeText={setPassword}
+                  placeholder="Enter at least 6 characters"
+                  secureTextEntry={!showPassword}
+                  mode="outlined"
+                  style={styles.input}
+                  error={!!errors.password}
+                  right={
+                    <TextInput.Icon
+                      icon={showPassword ? "eye-off" : "eye"}
+                      onPress={() => setShowPassword((prev) => !prev)}
+                    />
+                  }
+                />
+                <HelperText type="error" visible={!!errors.password}>
+                  {errors.password}
+                </HelperText>
+
+                <TextInput
+                  label="Confirm Password *"
+                  value={confirmPassword}
+                  onChangeText={setConfirmPassword}
+                  placeholder="Re-enter your password"
+                  secureTextEntry={!showConfirmPassword}
+                  mode="outlined"
+                  style={styles.input}
+                  error={!!errors.confirmPassword}
+                  right={
+                    <TextInput.Icon
+                      icon={showConfirmPassword ? "eye-off" : "eye"}
+                      onPress={() => setShowConfirmPassword((prev) => !prev)}
+                    />
+                  }
+                />
+                <HelperText type="error" visible={!!errors.confirmPassword}>
+                  {errors.confirmPassword}
+                </HelperText>
+
+                <Button
+                  mode="contained"
+                  onPress={handleRegister}
+                  loading={loading}
+                  disabled={loading}
+                  style={styles.continueButton}
+                  contentStyle={styles.buttonContent}
+                >
+                  Continue
+                </Button>
+              </Card.Content>
+            </Card>
           </Animated.View>
 
           <Animated.View
@@ -273,7 +275,7 @@ export default function RegisterScreen() {
             </Text>
           </Animated.View>
         </KeyboardAwareScrollView>
-      </View>
+      </ScreenBackground>
     </TouchableWithoutFeedback>
   );
 }
@@ -286,19 +288,29 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   scrollContent: {
-    paddingHorizontal: 24,
-    paddingBottom: 40, // Extra padding for keyboard
+    paddingHorizontal: 20,
+    paddingTop: 18,
+    paddingBottom: 32,
   },
   title: {
     fontWeight: "bold",
-    marginTop: 32,
+    marginTop: 14,
     marginBottom: 8,
   },
   subtitle: {
-    marginBottom: 32,
+    marginBottom: 18,
+  },
+  formWrap: {
+    marginBottom: 18,
+  },
+  formCard: {
+    borderRadius: 18,
+    backgroundColor: "rgba(23,33,43,0.72)",
+    borderWidth: 1,
+    borderColor: "rgba(160,196,255,0.16)",
   },
   form: {
-    marginBottom: 32,
+    paddingVertical: 6,
   },
   input: {
     marginBottom: 8,
@@ -312,7 +324,7 @@ const styles = StyleSheet.create({
   },
   footer: {
     alignItems: "center",
-    paddingBottom: 32,
+    paddingBottom: 10,
   },
   footerText: {
     textAlign: "center",

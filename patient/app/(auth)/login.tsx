@@ -1,36 +1,38 @@
-import React, { useState } from 'react';
-import { View, StyleSheet, ScrollView } from 'react-native';
-import { Text, TextInput, Button, HelperText } from 'react-native-paper';
-import { router } from 'expo-router';
-import Animated, { FadeInDown } from 'react-native-reanimated';
-import Toast from 'react-native-toast-message';
+import React, { useState } from "react";
+import { View, StyleSheet } from "react-native";
+import { Text, TextInput, Button, HelperText, Card } from "react-native-paper";
+import { router } from "expo-router";
+import Animated, { FadeInDown } from "react-native-reanimated";
+import Toast from "react-native-toast-message";
 
-import { theme } from '@/src/constants/theme';
-import { useAuthStore } from '@/src/store/authStore';
-import { authAPI } from '@/src/services/api';
-import Header from '@/src/components/Header';
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import { theme } from "@/src/constants/theme";
+import { useAuthStore } from "@/src/store/authStore";
+import { authAPI } from "@/src/services/api";
+import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
+import ScreenBackground from "@/src/components/ScreenBackground";
 
 export default function LoginScreen() {
   const { login } = useAuthStore();
-  
-  const [phone, setPhone] = useState('');
-  const [password, setPassword] = useState('');
+
+  const [phone, setPhone] = useState("");
+  const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
-  const [errors, setErrors] = useState<{ phone?: string; password?: string }>({});
+  const [errors, setErrors] = useState<{ phone?: string; password?: string }>(
+    {},
+  );
 
   const validateForm = () => {
     const newErrors: { phone?: string; password?: string } = {};
-    
+
     if (!phone) {
-      newErrors.phone = 'Phone number is required';
+      newErrors.phone = "Phone number is required";
     }
-    
+
     if (!password) {
-      newErrors.password = 'Password is required';
+      newErrors.password = "Password is required";
     }
-    
+
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
@@ -44,16 +46,16 @@ export default function LoginScreen() {
       const { token, user } = response.data;
       login(token, user);
       Toast.show({
-        type: 'success',
-        text1: 'Login Successful',
-        text2: 'Welcome back!',
+        type: "success",
+        text1: "Login Successful",
+        text2: "Welcome back!",
       });
-      router.replace('/(tabs)');
+      router.replace("/(tabs)");
     } catch (error: any) {
       Toast.show({
-        type: 'error',
-        text1: 'Login Failed',
-        text2: error.response?.data?.message || 'Invalid credentials',
+        type: "error",
+        text1: "Login Failed",
+        text2: error.response?.data?.message || "Invalid credentials",
       });
     } finally {
       setLoading(false);
@@ -61,98 +63,115 @@ export default function LoginScreen() {
   };
 
   return (
-    <View style={[styles.container, { backgroundColor: theme.colors.background }]}>
-      
-        <KeyboardAwareScrollView 
+    <ScreenBackground>
+      <KeyboardAwareScrollView
         style={styles.content}
+        contentContainerStyle={styles.scrollContent}
         showsVerticalScrollIndicator={false}
         enableOnAndroid={true}
         extraScrollHeight={20}
         keyboardShouldPersistTaps="handled"
       >
         <Animated.View entering={FadeInDown.delay(200).duration(600)}>
-          <Text variant="headlineSmall" style={styles.title}>
+          <Text variant="headlineMedium" style={styles.title}>
             Welcome back!
           </Text>
-          <Text variant="bodyMedium" style={[styles.subtitle, { color: theme.colors.onSurfaceVariant }]}>
+          <Text
+            variant="bodyMedium"
+            style={[styles.subtitle, { color: theme.colors.onSurfaceVariant }]}
+          >
             Sign in to your account to continue
           </Text>
         </Animated.View>
 
-        <Animated.View entering={FadeInDown.delay(400).duration(600)} style={styles.form}>
-          <TextInput
-            label="Phone Number"
-            value={phone}
-            onChangeText={(text) => {
-              setPhone(text);
-              if (errors.phone) setErrors({ ...errors, phone: undefined });
-            }}
-            placeholder="+2519xxxxxxxx"
-            keyboardType="phone-pad"
-            mode="outlined"
-            error={!!errors.phone}
-            style={styles.input}
-          />
-          <HelperText type="error" visible={!!errors.phone}>
-            {errors.phone}
-          </HelperText>
-
-          <TextInput
-            label="Password"
-            value={password}
-            onChangeText={(text) => {
-              setPassword(text);
-              if (errors.password) setErrors({ ...errors, password: undefined });
-            }}
-            placeholder="Enter your password"
-            secureTextEntry={!showPassword}
-            mode="outlined"
-            error={!!errors.password}
-            style={styles.input}
-            right={
-              <TextInput.Icon
-                icon={showPassword ? 'eye-off' : 'eye'}
-                onPress={() => setShowPassword(!showPassword)}
+        <Animated.View entering={FadeInDown.delay(400).duration(600)}>
+          <Card style={styles.formCard}>
+            <Card.Content style={styles.form}>
+              <TextInput
+                label="Phone Number"
+                value={phone}
+                onChangeText={(text) => {
+                  setPhone(text);
+                  if (errors.phone) setErrors({ ...errors, phone: undefined });
+                }}
+                placeholder="+2519xxxxxxxx"
+                keyboardType="phone-pad"
+                mode="outlined"
+                error={!!errors.phone}
+                style={styles.input}
               />
-            }
-          />
-          <HelperText type="error" visible={!!errors.password}>
-            {errors.password}
-          </HelperText>
+              <HelperText type="error" visible={!!errors.phone}>
+                {errors.phone}
+              </HelperText>
 
-          <Button
-            mode="contained"
-            onPress={handleLogin}
-            loading={loading}
-            disabled={loading}
-            style={styles.loginButton}
-            contentStyle={styles.buttonContent}
-          >
-            Sign In
-          </Button>
+              <TextInput
+                label="Password"
+                value={password}
+                onChangeText={(text) => {
+                  setPassword(text);
+                  if (errors.password)
+                    setErrors({ ...errors, password: undefined });
+                }}
+                placeholder="Enter your password"
+                secureTextEntry={!showPassword}
+                mode="outlined"
+                error={!!errors.password}
+                style={styles.input}
+                right={
+                  <TextInput.Icon
+                    icon={showPassword ? "eye-off" : "eye"}
+                    onPress={() => setShowPassword(!showPassword)}
+                  />
+                }
+              />
+              <HelperText type="error" visible={!!errors.password}>
+                {errors.password}
+              </HelperText>
 
-          <Button
-            mode="text"
-            onPress={() => router.push('/(auth)/forgot-password')}
-            style={styles.forgotButton}
-          >
-            Forgot Password?
-          </Button>
+              <Button
+                mode="contained"
+                onPress={handleLogin}
+                loading={loading}
+                disabled={loading}
+                style={styles.loginButton}
+                contentStyle={styles.buttonContent}
+              >
+                Sign In
+              </Button>
+
+              <Button
+                mode="text"
+                onPress={() => router.push("/(auth)/forgot-password")}
+                style={styles.forgotButton}
+              >
+                Forgot Password?
+              </Button>
+            </Card.Content>
+          </Card>
         </Animated.View>
 
-        <Animated.View entering={FadeInDown.delay(600).duration(600)} style={styles.footer}>
-          <Text variant="bodyMedium" style={[styles.footerText, { color: theme.colors.onSurfaceVariant }]}>
-            Don't have an account?{' '}
-            <Text 
-              style={{ color: theme.colors.primary, fontWeight: '600' }}
-              onPress={() => router.push('/(auth)/register')}
+        <Animated.View
+          entering={FadeInDown.delay(600).duration(600)}
+          style={styles.footer}
+        >
+          <Text
+            variant="bodyMedium"
+            style={[
+              styles.footerText,
+              { color: theme.colors.onSurfaceVariant },
+            ]}
+          >
+            Don't have an account?{" "}
+            <Text
+              style={{ color: theme.colors.primary, fontWeight: "600" }}
+              onPress={() => router.push("/(auth)/register")}
             >
               Sign Up
             </Text>
           </Text>
         </Animated.View>
       </KeyboardAwareScrollView>
-    </View>
+    </ScreenBackground>
   );
 }
 
@@ -162,18 +181,28 @@ const styles = StyleSheet.create({
   },
   content: {
     flex: 1,
-    paddingHorizontal: 24,
+    paddingHorizontal: 20,
+  },
+  scrollContent: {
+    paddingTop: 26,
+    paddingBottom: 30,
   },
   title: {
-    fontWeight: 'bold',
-    marginTop: 32,
+    fontWeight: "bold",
+    marginTop: 16,
     marginBottom: 8,
   },
   subtitle: {
-    marginBottom: 32,
+    marginBottom: 20,
+  },
+  formCard: {
+    borderRadius: 18,
+    backgroundColor: "rgba(23,33,43,0.72)",
+    borderWidth: 1,
+    borderColor: "rgba(160,196,255,0.16)",
   },
   form: {
-    marginBottom: 32,
+    paddingVertical: 8,
   },
   input: {
     marginBottom: 8,
@@ -190,10 +219,11 @@ const styles = StyleSheet.create({
     paddingVertical: 8,
   },
   footer: {
-    alignItems: 'center',
-    paddingBottom: 32,
+    alignItems: "center",
+    paddingTop: 20,
+    paddingBottom: 18,
   },
   footerText: {
-    textAlign: 'center',
+    textAlign: "center",
   },
 });
