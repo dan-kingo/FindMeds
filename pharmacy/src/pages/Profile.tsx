@@ -1,162 +1,183 @@
-import  { useState, useEffect, ChangeEvent, FormEvent } from 'react'
-import { Save, MapPin, Phone, Mail, Building, FileText, AlertCircle, ArrowLeft } from 'lucide-react'
-import { useAuth } from '../contexts/AuthContext'
-import { useAuthStore } from '../stores/authStore'
-import { useNavigate, useSearchParams } from 'react-router-dom'
+import { useState, useEffect, ChangeEvent, FormEvent } from "react";
+import {
+  Save,
+  MapPin,
+  Phone,
+  Mail,
+  Building,
+  FileText,
+  AlertCircle,
+  ArrowLeft,
+} from "lucide-react";
+import { useAuth } from "../contexts/AuthContext";
+import { useAuthStore } from "../stores/authStore";
+import { useNavigate, useSearchParams } from "react-router-dom";
 
 const Profile: React.FC = () => {
-  const { updateProfile, loading } = useAuth()
-  const { pharmacy, isProfileComplete } = useAuthStore()
-  const navigate = useNavigate()
-  const [searchParams] = useSearchParams()
-  const isEditing = searchParams.get('edit') === 'true'
-  
+  const { updateProfile, loading } = useAuth();
+  const { pharmacy, isProfileComplete } = useAuthStore();
+  const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const isEditing = searchParams.get("edit") === "true";
+
   const [formData, setFormData] = useState({
-    name: '',
-    ownerName: '',
-    licenseNumber: '',
-    phone: '',
-    email: '',
-    address: '',
-    city: '',
-    woreda: '',
+    name: "",
+    ownerName: "",
+    licenseNumber: "",
+    phone: "",
+    email: "",
+    address: "",
+    city: "",
+    woreda: "",
     deliveryAvailable: false,
     location: {
-      coordinates: [0, 0] as [number, number]
-    }
-  })
-  
-  const [message, setMessage] = useState('')
-  const [messageType, setMessageType] = useState<'success' | 'error'>('success')
+      coordinates: [0, 0] as [number, number],
+    },
+  });
+
+  const [message, setMessage] = useState("");
+  const [messageType, setMessageType] = useState<"success" | "error">(
+    "success",
+  );
 
   useEffect(() => {
     if (pharmacy) {
       setFormData({
-        name: pharmacy.name || '',
-        ownerName: pharmacy.ownerName || '',
-        licenseNumber: pharmacy.licenseNumber || '',
-        phone: pharmacy.phone || '',
-        email: pharmacy.email || '',
-        address: pharmacy.address || '',
-        city: pharmacy.city || '',
-        woreda: pharmacy.woreda || '',
+        name: pharmacy.name || "",
+        ownerName: pharmacy.ownerName || "",
+        licenseNumber: pharmacy.licenseNumber || "",
+        phone: pharmacy.phone || "",
+        email: pharmacy.email || "",
+        address: pharmacy.address || "",
+        city: pharmacy.city || "",
+        woreda: pharmacy.woreda || "",
         deliveryAvailable: pharmacy.deliveryAvailable || false,
         location: {
-          coordinates: pharmacy.location?.coordinates || [0, 0]
-        }
-      })
+          coordinates: pharmacy.location?.coordinates || [0, 0],
+        },
+      });
     }
-  }, [pharmacy])
+  }, [pharmacy]);
 
   const handleSubmit = async (e: FormEvent) => {
-    e.preventDefault()
-    setMessage('')
+    e.preventDefault();
+    setMessage("");
 
     try {
       const profileData = {
         ...formData,
         location: {
-          type: 'Point' as const,
-          coordinates: formData.location.coordinates
-        }
-      }
+          type: "Point" as const,
+          coordinates: formData.location.coordinates,
+        },
+      };
 
-      await updateProfile(profileData)
-      
-      setMessage('Profile updated successfully!')
-      setMessageType('success')
-      
+      await updateProfile(profileData);
+
+      setMessage("Profile updated successfully!");
+      setMessageType("success");
+
       // If this was the first time setup, redirect to pending approval or dashboard
       if (!isProfileComplete) {
         setTimeout(() => {
-          navigate('/pending-approval')
-        }, 2000)
+          navigate("/pending-approval");
+        }, 2000);
       } else if (isEditing) {
         setTimeout(() => {
-          navigate('/dashboard')
-        }, 2000)
+          navigate("/dashboard");
+        }, 2000);
       }
-      
-      // Clear message after 5 seconds
-      setTimeout(() => setMessage(''), 5000)
-    } catch (error: any) {
-      setMessage(error.message || 'Failed to update profile. Please try again.')
-      setMessageType('error')
-    }
-  }
 
-  const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    const { name, value, type } = e.target
-    
-    if (name === 'longitude' || name === 'latitude') {
-      const coord = parseFloat(value) || 0
-      const index = name === 'longitude' ? 0 : 1
-      setFormData(prev => ({
+      // Clear message after 5 seconds
+      setTimeout(() => setMessage(""), 5000);
+    } catch (error: any) {
+      setMessage(
+        error.message || "Failed to update profile. Please try again.",
+      );
+      setMessageType("error");
+    }
+  };
+
+  const handleChange = (
+    e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+  ) => {
+    const { name, value, type } = e.target;
+
+    if (name === "longitude" || name === "latitude") {
+      const coord = parseFloat(value) || 0;
+      const index = name === "longitude" ? 0 : 1;
+      setFormData((prev) => ({
         ...prev,
         location: {
           coordinates: [
             index === 0 ? coord : prev.location.coordinates[0],
-            index === 1 ? coord : prev.location.coordinates[1]
-          ] as [number, number]
-        }
-      }))
+            index === 1 ? coord : prev.location.coordinates[1],
+          ] as [number, number],
+        },
+      }));
     } else {
-      setFormData(prev => ({
+      setFormData((prev) => ({
         ...prev,
-        [name]: type === 'checkbox' ? (e.target as HTMLInputElement).checked : value
-      }))
+        [name]:
+          type === "checkbox" ? (e.target as HTMLInputElement).checked : value,
+      }));
     }
-  }
+  };
 
   const getCurrentLocation = () => {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
         (position) => {
-          setFormData(prev => ({
+          setFormData((prev) => ({
             ...prev,
             location: {
-              coordinates: [position.coords.longitude, position.coords.latitude]
-            }
-          }))
-          setMessage('Location updated successfully!')
-          setMessageType('success')
-          setTimeout(() => setMessage(''), 3000)
+              coordinates: [
+                position.coords.longitude,
+                position.coords.latitude,
+              ],
+            },
+          }));
+          setMessage("Location updated successfully!");
+          setMessageType("success");
+          setTimeout(() => setMessage(""), 3000);
         },
         (_error) => {
-          setMessage('Unable to get your location. Please enter coordinates manually.')
-          setMessageType('error')
-          setTimeout(() => setMessage(''), 5000)
-        }
-      )
+          setMessage(
+            "Unable to get your location. Please enter coordinates manually.",
+          );
+          setMessageType("error");
+          setTimeout(() => setMessage(""), 5000);
+        },
+      );
     } else {
-      setMessage('Geolocation is not supported by this browser.')
-      setMessageType('error')
+      setMessage("Geolocation is not supported by this browser.");
+      setMessageType("error");
     }
-  }
+  };
 
-  const pageTitle = !isProfileComplete 
-    ? 'Complete Your Pharmacy Profile' 
-    : isEditing 
-      ? 'Edit Pharmacy Profile' 
-      : 'Pharmacy Profile'
+  const pageTitle = !isProfileComplete
+    ? "Complete Your Pharmacy Profile"
+    : isEditing
+      ? "Edit Pharmacy Profile"
+      : "Pharmacy Profile";
 
-  const pageDescription = !isProfileComplete 
-    ? 'Please complete your pharmacy information to continue' 
-    : isEditing 
-      ? 'Update your pharmacy information and settings' 
-      : 'Manage your pharmacy information and settings'
+  const pageDescription = !isProfileComplete
+    ? "Please complete your pharmacy information to continue"
+    : isEditing
+      ? "Update your pharmacy information and settings"
+      : "Manage your pharmacy information and settings";
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col items-start gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <h1 className="text-2xl font-bold text-gray-900">{pageTitle}</h1>
           <p className="text-gray-600">{pageDescription}</p>
         </div>
         {isEditing && isProfileComplete && (
           <button
-            onClick={() => navigate('/dashboard')}
-            className="btn-secondary flex items-center"
+            onClick={() => navigate("/dashboard")}
+            className="btn-secondary flex items-center w-full sm:w-auto"
           >
             <ArrowLeft className="h-4 w-4 mr-2" />
             Back to Dashboard
@@ -169,18 +190,24 @@ const Profile: React.FC = () => {
           <AlertCircle className="h-5 w-5 mr-2 flex-shrink-0 mt-0.5" />
           <div>
             <p className="font-medium">Profile Incomplete</p>
-            <p className="text-sm">Please complete all required fields to access your dashboard.</p>
+            <p className="text-sm">
+              Please complete all required fields to access your dashboard.
+            </p>
           </div>
         </div>
       )}
 
       {message && (
-        <div className={`p-4 rounded-lg flex items-center ${
-          messageType === 'success' 
-            ? 'bg-success-50 text-success-700 border border-success-200' 
-            : 'bg-error-50 text-error-700 border border-error-200'
-        }`}>
-          {messageType === 'error' && <AlertCircle className="h-5 w-5 mr-2 flex-shrink-0" />}
+        <div
+          className={`p-4 rounded-lg flex items-center ${
+            messageType === "success"
+              ? "bg-success-50 text-success-700 border border-success-200"
+              : "bg-error-50 text-error-700 border border-error-200"
+          }`}
+        >
+          {messageType === "error" && (
+            <AlertCircle className="h-5 w-5 mr-2 flex-shrink-0" />
+          )}
           {message}
         </div>
       )}
@@ -197,7 +224,10 @@ const Profile: React.FC = () => {
           <div className="card-body">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
-                <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-2">
+                <label
+                  htmlFor="name"
+                  className="block text-sm font-medium text-gray-700 mb-2"
+                >
                   Pharmacy Name *
                 </label>
                 <input
@@ -213,7 +243,10 @@ const Profile: React.FC = () => {
               </div>
 
               <div>
-                <label htmlFor="ownerName" className="block text-sm font-medium text-gray-700 mb-2">
+                <label
+                  htmlFor="ownerName"
+                  className="block text-sm font-medium text-gray-700 mb-2"
+                >
                   Owner Name *
                 </label>
                 <input
@@ -229,7 +262,10 @@ const Profile: React.FC = () => {
               </div>
 
               <div>
-                <label htmlFor="licenseNumber" className="block text-sm font-medium text-gray-700 mb-2">
+                <label
+                  htmlFor="licenseNumber"
+                  className="block text-sm font-medium text-gray-700 mb-2"
+                >
                   License Number *
                 </label>
                 <div className="relative">
@@ -248,7 +284,10 @@ const Profile: React.FC = () => {
               </div>
 
               <div>
-                <label htmlFor="phone" className="block text-sm font-medium text-gray-700 mb-2">
+                <label
+                  htmlFor="phone"
+                  className="block text-sm font-medium text-gray-700 mb-2"
+                >
                   Phone Number *
                 </label>
                 <div className="relative">
@@ -267,7 +306,10 @@ const Profile: React.FC = () => {
               </div>
 
               <div className="md:col-span-2">
-                <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
+                <label
+                  htmlFor="email"
+                  className="block text-sm font-medium text-gray-700 mb-2"
+                >
                   Email Address *
                 </label>
                 <div className="relative">
@@ -299,7 +341,10 @@ const Profile: React.FC = () => {
           <div className="card-body">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div className="md:col-span-2">
-                <label htmlFor="address" className="block text-sm font-medium text-gray-700 mb-2">
+                <label
+                  htmlFor="address"
+                  className="block text-sm font-medium text-gray-700 mb-2"
+                >
                   Street Address
                 </label>
                 <input
@@ -314,7 +359,10 @@ const Profile: React.FC = () => {
               </div>
 
               <div>
-                <label htmlFor="city" className="block text-sm font-medium text-gray-700 mb-2">
+                <label
+                  htmlFor="city"
+                  className="block text-sm font-medium text-gray-700 mb-2"
+                >
                   City *
                 </label>
                 <input
@@ -330,7 +378,10 @@ const Profile: React.FC = () => {
               </div>
 
               <div>
-                <label htmlFor="woreda" className="block text-sm font-medium text-gray-700 mb-2">
+                <label
+                  htmlFor="woreda"
+                  className="block text-sm font-medium text-gray-700 mb-2"
+                >
                   Woreda *
                 </label>
                 <input
@@ -346,7 +397,10 @@ const Profile: React.FC = () => {
               </div>
 
               <div>
-                <label htmlFor="longitude" className="block text-sm font-medium text-gray-700 mb-2">
+                <label
+                  htmlFor="longitude"
+                  className="block text-sm font-medium text-gray-700 mb-2"
+                >
                   Longitude (GPS)
                 </label>
                 <input
@@ -362,7 +416,10 @@ const Profile: React.FC = () => {
               </div>
 
               <div>
-                <label htmlFor="latitude" className="block text-sm font-medium text-gray-700 mb-2">
+                <label
+                  htmlFor="latitude"
+                  className="block text-sm font-medium text-gray-700 mb-2"
+                >
                   Latitude (GPS)
                 </label>
                 <input
@@ -397,7 +454,9 @@ const Profile: React.FC = () => {
         {/* Service Settings */}
         <div className="card">
           <div className="card-header">
-            <h3 className="text-lg font-semibold text-gray-900">Service Settings</h3>
+            <h3 className="text-lg font-semibold text-gray-900">
+              Service Settings
+            </h3>
           </div>
           <div className="card-body">
             <div className="flex items-center">
@@ -409,7 +468,10 @@ const Profile: React.FC = () => {
                 checked={formData.deliveryAvailable}
                 onChange={handleChange}
               />
-              <label htmlFor="deliveryAvailable" className="ml-2 block text-sm text-gray-900">
+              <label
+                htmlFor="deliveryAvailable"
+                className="ml-2 block text-sm text-gray-900"
+              >
                 Delivery service available
               </label>
             </div>
@@ -421,11 +483,7 @@ const Profile: React.FC = () => {
 
         {/* Submit Button */}
         <div className="flex justify-end">
-          <button
-            type="submit"
-            disabled={loading}
-            className="btn-primary"
-          >
+          <button type="submit" disabled={loading} className="btn-primary">
             {loading ? (
               <div className="flex items-center">
                 <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
@@ -434,14 +492,14 @@ const Profile: React.FC = () => {
             ) : (
               <>
                 <Save className="h-4 w-4 mr-2" />
-                {!isProfileComplete ? 'Complete Profile' : 'Save Changes'}
+                {!isProfileComplete ? "Complete Profile" : "Save Changes"}
               </>
             )}
           </button>
         </div>
       </form>
     </div>
-  )
-}
+  );
+};
 
-export default Profile
+export default Profile;
