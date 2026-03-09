@@ -5,7 +5,7 @@ backend/.env
 backend/src/logs
 .env
 
-pharmacy/.vite
+apharmacy/.vite
 .vscode/
 patients/.vite
 patients/dist/
@@ -14,5 +14,5 @@ patients/.expo
 admin/.vite
 admin/dist/
 admin/.env
-pharmacy/dist/
-pharmacy/.env
+apharmacy/dist/
+apharmacy/.env
