@@ -1,28 +1,33 @@
 {
   "expo": {
     "name": "FindMeds",
-    "slug": "patient",
+    "slug": "findmeds-patient",
     "version": "1.0.0",
+    "runtimeVersion": {
+      "policy": "appVersion"
+    },
+    "updates": {
+      "fallbackToCacheTimeout": 0
+    },
     "orientation": "portrait",
-    "icon": "./assets/images/findmeds.png",
-    "scheme": "findmeds",
+    "icon": "./assets/images/FindMeds.png",
+    "scheme": "findmeds-patient",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.dankingo.findmeds.patient",
+      "buildNumber": "1"
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/images/findmeds.png",
+        "foregroundImage": "./assets/images/FindMeds.png",
         "backgroundColor": "#ffffff"
       },
       "edgeToEdgeEnabled": true,
-      "package": "com.dankingo.patient",
-      "permissions": [
-        "ACCESS_COARSE_LOCATION",
-        "ACCESS_FINE_LOCATION",
-        "FOREGROUND_SERVICE"
-      ]
+      "package": "com.dankingo.findmeds.patient",
+      "versionCode": 1,
+      "permissions": ["ACCESS_COARSE_LOCATION", "ACCESS_FINE_LOCATION"]
     },
     "web": {
       "bundler": "metro",
@@ -34,7 +39,7 @@
       [
         "expo-splash-screen",
         {
-          "image": "./assets/images/findmeds.png",
+          "image": "./assets/images/FindMeds.png",
           "imageWidth": 200,
           "resizeMode": "contain",
           "backgroundColor": "#ffffff"
