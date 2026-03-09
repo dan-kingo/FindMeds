@@ -1,0 +1,18 @@
+node_modules/
+backend/dist/
+backend/.env
+# Logs
+backend/src/logs
+.env
+
+pharmacy/.vite
+.vscode/
+patients/.vite
+patients/dist/
+patients/.env
+patients/.expo
+admin/.vite
+admin/dist/
+admin/.env
+pharmacy/dist/
+pharmacy/.env

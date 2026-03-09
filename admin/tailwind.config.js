@@ -1,0 +1,66 @@
+/** @type {import('tailwindcss').Config} */
+export default {
+  content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"],
+  theme: {
+    extend: {
+      colors: {
+        primary: {
+          50: "#fff7ed",
+          100: "#ffedd5",
+          200: "#fed7aa",
+          300: "#fdba74",
+          400: "#fb923c",
+          500: "#f97316",
+          600: "#ea580c",
+          700: "#c2410c",
+          800: "#9a3412",
+          900: "#7c2d12",
+        },
+        success: {
+          50: "#effef8",
+          100: "#d8faea",
+          200: "#b5f4d8",
+          300: "#7ae9bd",
+          400: "#3dd5a0",
+          500: "#1eb885",
+          600: "#14946d",
+          700: "#137658",
+          800: "#135e47",
+          900: "#124d3c",
+        },
+        warning: {
+          50: "#fefce8",
+          100: "#fef9c3",
+          200: "#fef08a",
+          300: "#fde047",
+          400: "#facc15",
+          500: "#eab308",
+          600: "#ca8a04",
+          700: "#a16207",
+          800: "#854d0e",
+          900: "#713f12",
+        },
+        error: {
+          50: "#fff1f2",
+          100: "#ffe4e6",
+          200: "#fecdd3",
+          300: "#fda4af",
+          400: "#fb7185",
+          500: "#f43f5e",
+          600: "#e11d48",
+          700: "#be123c",
+          800: "#9f1239",
+          900: "#881337",
+        },
+      },
+      fontFamily: {
+        sans: ["Space Grotesk", "system-ui", "sans-serif"],
+        heading: ["Sora", "Space Grotesk", "system-ui", "sans-serif"],
+      },
+      boxShadow: {
+        soft: "0 12px 30px -16px rgba(17, 24, 39, 0.32)",
+      },
+    },
+  },
+  plugins: [],
+};
