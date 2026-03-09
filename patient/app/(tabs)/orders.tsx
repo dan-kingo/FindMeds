@@ -108,10 +108,17 @@ export default function OrdersScreen() {
   };
 
   const getTotalAmount = (order: Order) => {
-    return order.items.reduce(
-      (sum, item) => sum + item.price * item.quantity,
+    const orderItems = Array.isArray(order.items) ? order.items : [];
+    return orderItems.reduce(
+      (sum, item) => sum + (Number(item?.price) || 0) * (item?.quantity || 0),
       0,
     );
+  };
+
+  const getItemDisplayName = (item: any) => {
+    if (item?.medicine?.name) return item.medicine.name;
+    if (item?.name) return item.name;
+    return "Unavailable medicine";
   };
 
   if (loading) {
@@ -225,124 +232,130 @@ export default function OrdersScreen() {
             <RefreshControl refreshing={refreshing} onRefresh={handleRefresh} />
           }
         >
-          {orders.map((order, index) => (
-            <Animated.View
-              key={order._id}
-              entering={FadeInDown.delay(index * 100).duration(300)}
-            >
-              <Card style={styles.orderCard}>
-                <Card.Content>
-                  <View style={styles.orderHeader}>
-                    <View style={styles.orderInfo}>
-                      <Text variant="titleMedium">
-                        Order #{order._id.slice(-8)}
-                      </Text>
-                      <Text variant="bodySmall" style={styles.orderDate}>
-                        {new Date(order.createdAt).toLocaleDateString()}
-                      </Text>
-                    </View>
-                    <Chip
-                      mode="flat"
-                      icon={getStatusIcon(order.status)}
-                      style={[
-                        styles.statusChip,
-                        {
-                          backgroundColor:
-                            typeof theme.colors[
-                              getStatusColor(
-                                order.status,
-                              ) as keyof typeof theme.colors
-                            ] === "string"
-                              ? (theme.colors[
-                                  getStatusColor(
-                                    order.status,
-                                  ) as keyof typeof theme.colors
-                                ] as string)
-                              : (theme.colors.surface as string),
-                        },
-                      ]}
-                    >
-                      {order.status}
-                    </Chip>
-                  </View>
+          {orders.map((order, index) => {
+            const orderItems = Array.isArray(order.items) ? order.items : [];
 
-                  <View style={styles.orderDetails}>
-                    <Text variant="bodyMedium" style={styles.itemCount}>
-                      {order.items.length} item
-                      {order.items.length > 1 ? "s" : ""}
-                    </Text>
-                    <Text variant="bodyMedium" style={styles.deliveryType}>
-                      {order.deliveryType === "delivery"
-                        ? "Home Delivery"
-                        : "Pickup"}
-                    </Text>
-                  </View>
-
-                  <View style={styles.orderItems}>
-                    {order.items.slice(0, 2).map((item, itemIndex) => (
-                      <Text
-                        key={itemIndex}
-                        variant="bodySmall"
-                        style={styles.itemName}
-                      >
-                        • {item.medicine.name} × {item.quantity}
-                      </Text>
-                    ))}
-                    {order.items.length > 2 && (
-                      <Text variant="bodySmall" style={styles.moreItems}>
-                        +{order.items.length - 2} more item
-                        {order.items.length - 2 > 1 ? "s" : ""}
-                      </Text>
-                    )}
-                  </View>
-
-                  <View style={styles.orderFooter}>
-                    <Text variant="titleMedium" style={styles.totalAmount}>
-                      Total: ${getTotalAmount(order).toFixed(2)}
-                    </Text>
-                    <Button
-                      mode="outlined"
-                      compact
-                      onPress={() => router.push(`/order-details/${order._id}`)}
-                    >
-                      View Details
-                    </Button>
-                  </View>
-
-                  {order.prescriptionUrl && (
-                    <View style={styles.prescriptionInfo}>
-                      <MaterialCommunityIcons
-                        name="file-document"
-                        size={16}
-                        color={theme.colors.primary}
-                      />
-                      <TouchableOpacity
-                        onPress={() => {
-                          const url = order.prescriptionUrl as string;
-                          const full = url.startsWith("http")
-                            ? url
-                            : `https://api-medimap.onrender.com${url}`;
-                          Linking.openURL(full).catch(() => {
-                            Toast.show({
-                              type: "error",
-                              text1: "Unable to open prescription",
-                            });
-                          });
-                        }}
-                      >
-                        <Text
-                          variant="bodySmall"
-                          style={styles.prescriptionText}
-                        >
-                          View prescription
+            return (
+              <Animated.View
+                key={order._id}
+                entering={FadeInDown.delay(index * 100).duration(300)}
+              >
+                <Card style={styles.orderCard}>
+                  <Card.Content>
+                    <View style={styles.orderHeader}>
+                      <View style={styles.orderInfo}>
+                        <Text variant="titleMedium">
+                          Order #{order._id.slice(-8)}
                         </Text>
-                      </TouchableOpacity>
+                        <Text variant="bodySmall" style={styles.orderDate}>
+                          {new Date(order.createdAt).toLocaleDateString()}
+                        </Text>
+                      </View>
+                      <Chip
+                        mode="flat"
+                        icon={getStatusIcon(order.status)}
+                        style={[
+                          styles.statusChip,
+                          {
+                            backgroundColor:
+                              typeof theme.colors[
+                                getStatusColor(
+                                  order.status,
+                                ) as keyof typeof theme.colors
+                              ] === "string"
+                                ? (theme.colors[
+                                    getStatusColor(
+                                      order.status,
+                                    ) as keyof typeof theme.colors
+                                  ] as string)
+                                : (theme.colors.surface as string),
+                          },
+                        ]}
+                      >
+                        {order.status}
+                      </Chip>
                     </View>
-                  )}
-                </Card.Content>
-              </Card>
-            </Animated.View>
-          ))}
+
+                    <View style={styles.orderDetails}>
+                      <Text variant="bodyMedium" style={styles.itemCount}>
+                        {orderItems.length} item
+                        {orderItems.length > 1 ? "s" : ""}
+                      </Text>
+                      <Text variant="bodyMedium" style={styles.deliveryType}>
+                        {order.deliveryType === "delivery"
+                          ? "Home Delivery"
+                          : "Pickup"}
+                      </Text>
+                    </View>
+
+                    <View style={styles.orderItems}>
+                      {orderItems.slice(0, 2).map((item, itemIndex) => (
+                        <Text
+                          key={itemIndex}
+                          variant="bodySmall"
+                          style={styles.itemName}
+                        >
+                          • {getItemDisplayName(item)} × {item?.quantity || 0}
+                        </Text>
+                      ))}
+                      {orderItems.length > 2 && (
+                        <Text variant="bodySmall" style={styles.moreItems}>
+                          +{orderItems.length - 2} more item
+                          {orderItems.length - 2 > 1 ? "s" : ""}
+                        </Text>
+                      )}
+                    </View>
+
+                    <View style={styles.orderFooter}>
+                      <Text variant="titleMedium" style={styles.totalAmount}>
+                        Total: ${getTotalAmount(order).toFixed(2)}
+                      </Text>
+                      <Button
+                        mode="outlined"
+                        compact
+                        onPress={() =>
+                          router.push(`/order-details/${order._id}`)
+                        }
+                      >
+                        View Details
+                      </Button>
+                    </View>
+
+                    {order.prescriptionUrl && (
+                      <View style={styles.prescriptionInfo}>
+                        <MaterialCommunityIcons
+                          name="file-document"
+                          size={16}
+                          color={theme.colors.primary}
+                        />
+                        <TouchableOpacity
+                          onPress={() => {
+                            const url = order.prescriptionUrl as string;
+                            const full = url.startsWith("http")
+                              ? url
+                              : `https://api-medimap.onrender.com${url}`;
+                            Linking.openURL(full).catch(() => {
+                              Toast.show({
+                                type: "error",
+                                text1: "Unable to open prescription",
+                              });
+                            });
+                          }}
+                        >
+                          <Text
+                            variant="bodySmall"
+                            style={styles.prescriptionText}
+                          >
+                            View prescription
+                          </Text>
+                        </TouchableOpacity>
+                      </View>
+                    )}
+                  </Card.Content>
+                </Card>
+              </Animated.View>
+            );
+          })}
         </ScrollView>
       </View>
     </ScreenBackground>
