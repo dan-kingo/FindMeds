@@ -6,6 +6,7 @@ import {
   FlatList,
   Image,
   TouchableOpacity,
+  ActivityIndicator,
 } from "react-native";
 import { Text, Searchbar, Card, Button, Chip, FAB } from "react-native-paper";
 import { router } from "expo-router";
@@ -71,7 +72,6 @@ export default function SearchScreen() {
     try {
       const { status } = await Location.requestForegroundPermissionsAsync();
       if (status !== "granted") {
-        console.log("Location permission denied");
         return;
       }
 
@@ -81,7 +81,7 @@ export default function SearchScreen() {
         longitude: location.coords.longitude,
       });
     } catch (error) {
-      console.error("Location error:", error);
+      // Location is optional for search ranking; keep search usable.
     }
   };
 
@@ -116,19 +116,9 @@ export default function SearchScreen() {
         params.longitude = location.longitude;
       }
 
-      console.log("Search params:", params);
-
       const response = await medicineAPI.searchMedicines(params);
-      console.log("Search response:", response.data);
       setSearchResults(response.data);
     } catch (error: any) {
-      console.error("Search error:", error);
-      console.log("Error details:", {
-        message: error.message,
-        response: error.response?.data,
-        status: error.response?.status,
-      });
-
       Toast.show({
         type: "error",
         text1: "Search Failed",
@@ -151,6 +141,7 @@ export default function SearchScreen() {
   const renderSearchResult = ({ item }: { item: SearchResult }) => (
     <Animated.View entering={FadeInDown.duration(300)}>
       <TouchableOpacity
+        activeOpacity={0.85}
         onPress={() => router.push(`/medicine/${item.medicine._id}`)}
       >
         <Card style={styles.resultCard}>
@@ -163,7 +154,11 @@ export default function SearchScreen() {
                 />
               )}
               <View style={styles.medicineInfo}>
-                <Text variant="titleMedium" numberOfLines={2}>
+                <Text
+                  variant="titleMedium"
+                  numberOfLines={2}
+                  style={styles.medicineName}
+                >
                   {item.medicine.name}
                 </Text>
                 <Text variant="bodySmall" style={styles.medicineDetails}>
@@ -251,7 +246,6 @@ export default function SearchScreen() {
         />
 
         <View style={styles.content}>
-          {/* Search Bar */}
           <View style={styles.searchSection}>
             <Searchbar
               placeholder="Search for medicines..."
@@ -261,13 +255,22 @@ export default function SearchScreen() {
               inputStyle={styles.searchInput}
               style={styles.searchBar}
             />
+            <View style={styles.searchMetaRow}>
+              <Text style={styles.searchHintText}>
+                {searchQuery.trim()
+                  ? loading
+                    ? "Searching nearby pharmacies..."
+                    : `${searchResults.length} result${searchResults.length === 1 ? "" : "s"}`
+                  : "Search by medicine name, type, or strength"}
+              </Text>
+            </View>
           </View>
 
-          {/* Filters */}
           <ScrollView
             horizontal
             showsHorizontalScrollIndicator={false}
             style={styles.filtersSection}
+            contentContainerStyle={styles.filtersContent}
           >
             <View style={styles.filterContainer}>
               <Chip
@@ -276,7 +279,7 @@ export default function SearchScreen() {
                 style={styles.filterChip}
                 selected={sortBy === "distance"}
               >
-                <Text style={styles.filterText}>Nearest</Text>
+                Nearest
               </Chip>
             </View>
 
@@ -287,7 +290,7 @@ export default function SearchScreen() {
                 style={styles.filterChip}
                 selected={sortBy === "price_asc"}
               >
-                <Text style={styles.filterText}>Price: Low to High</Text>
+                Price: Low to High
               </Chip>
             </View>
 
@@ -298,7 +301,7 @@ export default function SearchScreen() {
                 style={styles.filterChip}
                 selected={sortBy === "price_desc"}
               >
-                <Text style={styles.filterText}>Price: High to Low</Text>
+                Price: High to Low
               </Chip>
             </View>
 
@@ -309,14 +312,18 @@ export default function SearchScreen() {
                 style={styles.filterChip}
                 selected={deliveryFilter}
               >
-                <Text style={styles.filterText}>Delivery Available</Text>
+                Delivery Available
               </Chip>
             </View>
           </ScrollView>
 
-          {/* Search Results */}
           <View style={styles.resultsArea}>
-            {searchResults.length > 0 ? (
+            {loading && searchQuery.trim() ? (
+              <View style={styles.loadingState}>
+                <ActivityIndicator size="large" color={theme.colors.primary} />
+                <Text style={styles.loadingText}>Searching medicines...</Text>
+              </View>
+            ) : searchResults.length > 0 ? (
               <FlatList
                 data={searchResults}
                 renderItem={renderSearchResult}
@@ -330,7 +337,7 @@ export default function SearchScreen() {
             ) : searchQuery.trim() ? (
               <View style={styles.emptyState}>
                 <MaterialCommunityIcons
-                  name="magnify"
+                  name="package-variant-closed-remove"
                   size={64}
                   color={theme.colors.onSurfaceVariant}
                 />
@@ -338,13 +345,25 @@ export default function SearchScreen() {
                   No medicines found
                 </Text>
                 <Text variant="bodyMedium" style={styles.emptySubtitle}>
-                  Try adjusting your search terms or filters
+                  Try another medicine name or change filters.
                 </Text>
               </View>
-            ) 
-             : (
-<Text style={styles.emptyTitle}>.</Text>
-             )}
+            ) : (
+              <View style={styles.emptyState}>
+                <MaterialCommunityIcons
+                  name="magnify"
+                  size={64}
+                  color={theme.colors.onSurfaceVariant}
+                />
+                <Text variant="headlineSmall" style={styles.emptyTitle}>
+                  Start your search
+                </Text>
+                <Text variant="bodyMedium" style={styles.emptySubtitle}>
+                  Enter a medicine name to find available options from nearby
+                  pharmacies
+                </Text>
+              </View>
+            )}
           </View>
         </View>
 
@@ -369,12 +388,14 @@ const styles = StyleSheet.create({
   content: {
     flex: 1,
     paddingHorizontal: 16,
+    paddingTop: 8,
   },
   resultsArea: {
     flex: 1,
   },
   searchSection: {
-    paddingVertical: 16,
+    paddingTop: 8,
+    paddingBottom: 10,
   },
   searchBar: {
     borderRadius: 14,
@@ -387,15 +408,25 @@ const styles = StyleSheet.create({
   searchInput: {
     textAlignVertical: "center",
     paddingVertical: 0,
+    fontSize: 15,
+  },
+  searchMetaRow: {
+    marginTop: 8,
+    paddingHorizontal: 4,
+  },
+  searchHintText: {
+    color: theme.colors.onSurfaceVariant,
+    fontSize: 12,
   },
   filtersSection: {
-    marginBottom: 16,
+    marginBottom: 10,
+    maxHeight: 52,
+  },
+  filtersContent: {
+    paddingRight: 8,
   },
   filterContainer: {
     paddingVertical: 4,
-  },
-  filterText: {
-    paddingHorizontal: 8,
   },
   resultImage: {
     width: 72,
@@ -423,9 +454,10 @@ const styles = StyleSheet.create({
     marginRight: 8,
     height: 40,
     justifyContent: "center",
+    borderColor: "rgba(160,196,255,0.2)",
   },
   resultsList: {
-    paddingBottom: 100,
+    paddingBottom: 110,
   },
   resultCard: {
     marginBottom: 12,
@@ -436,9 +468,11 @@ const styles = StyleSheet.create({
   },
   medicineHeader: {
     flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
+    alignItems: "flex-start",
     marginBottom: 12,
+  },
+  medicineName: {
+    color: theme.colors.onSurface,
   },
   medicineInfo: {
     flex: 1,
@@ -455,6 +489,7 @@ const styles = StyleSheet.create({
   },
   medicineActions: {
     alignItems: "flex-end",
+    minWidth: 108,
   },
   prescriptionChip: {
     marginBottom: 8,
@@ -495,17 +530,29 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     paddingHorizontal: 32,
+    paddingBottom: 30,
   },
   emptyTitle: {
     marginTop: 16,
     marginBottom: 8,
     textAlign: "center",
-    fontSize: 16,
-    fontWeight: "600",
+    color: theme.colors.onSurface,
   },
   emptySubtitle: {
     textAlign: "center",
-    opacity: 0.7,
+    color: theme.colors.onSurfaceVariant,
+    lineHeight: 20,
+    maxWidth: 280,
+  },
+  loadingState: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    gap: 10,
+    paddingBottom: 30,
+  },
+  loadingText: {
+    color: theme.colors.onSurfaceVariant,
   },
   fab: {
     position: "absolute",
