@@ -49,10 +49,11 @@
     "experiments": {
       "typedRoutes": true
     },
+    "owner": "dan-kingo",
     "extra": {
       "router": {},
       "eas": {
-        "projectId": "c204d54c-fee5-4a93-ac55-9427aa6b9ec6"
+        "projectId": "5f5cd093-202b-4d18-ada7-cf311c70a759"
       }
     }
   }
