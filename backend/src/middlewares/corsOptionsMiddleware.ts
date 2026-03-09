@@ -9,6 +9,8 @@ const whitelist: string[] = [
   "https://medstream.onrender.com",
   "https://medstream-five.vercel.app",
   "https://medstream-admin.vercel.app",
+  "https://findmeds.vercel.app",
+  "https://findmeds-admin.vercel.app",
 ];
 
 const corsOptions: CorsOptions = {

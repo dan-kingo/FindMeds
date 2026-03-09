@@ -159,7 +159,7 @@ export const forgotPasswordRequestOtp = async (req: Request, res: Response) => {
   await user.save();
 
   await client.messages.create({
-    body: `Your MedStream password reset OTP is: ${otp}`,
+    body: `Your FindMeds password reset OTP is: ${otp}`,
     from: fromPhone,
     to: phone,
   });
