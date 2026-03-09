@@ -69,6 +69,10 @@ export default function TabLayout() {
         tabBarItemStyle: {
           borderRadius: 12,
         },
+        sceneStyle: {
+          backgroundColor: theme.colors.background,
+          paddingBottom: 92,
+        },
       }}
     >
       <Tabs.Screen

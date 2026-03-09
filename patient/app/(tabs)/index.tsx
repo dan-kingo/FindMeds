@@ -252,21 +252,6 @@ export default function HomeScreen() {
               </Card>
               <Card
                 style={styles.actionCard}
-                onPress={() => router.push("/upload-prescription")}
-              >
-                <Card.Content style={styles.actionContent}>
-                  <MaterialCommunityIcons
-                    name="file-upload-outline"
-                    size={32}
-                    color={theme.colors.secondary}
-                  />
-                  <Text variant="bodyMedium" style={styles.actionText}>
-                    Upload Rx
-                  </Text>
-                </Card.Content>
-              </Card>
-              <Card
-                style={styles.actionCard}
                 onPress={() => router.push("/(tabs)/orders")}
               >
                 <Card.Content style={styles.actionContent}>

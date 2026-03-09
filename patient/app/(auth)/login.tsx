@@ -72,7 +72,10 @@ export default function LoginScreen() {
         extraScrollHeight={20}
         keyboardShouldPersistTaps="handled"
       >
-        <Animated.View entering={FadeInDown.delay(200).duration(600)}>
+        <Animated.View
+          entering={FadeInDown.delay(200).duration(600)}
+          style={styles.centerBlock}
+        >
           <Text variant="headlineMedium" style={styles.title}>
             Welcome back!
           </Text>
@@ -84,7 +87,10 @@ export default function LoginScreen() {
           </Text>
         </Animated.View>
 
-        <Animated.View entering={FadeInDown.delay(400).duration(600)}>
+        <Animated.View
+          entering={FadeInDown.delay(400).duration(600)}
+          style={styles.centerBlock}
+        >
           <Card style={styles.formCard}>
             <Card.Content style={styles.form}>
               <TextInput
@@ -152,7 +158,7 @@ export default function LoginScreen() {
 
         <Animated.View
           entering={FadeInDown.delay(600).duration(600)}
-          style={styles.footer}
+          style={[styles.footer, styles.centerBlock]}
         >
           <Text
             variant="bodyMedium"
@@ -184,16 +190,24 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
   },
   scrollContent: {
-    paddingTop: 26,
-    paddingBottom: 30,
+    flexGrow: 1,
+    justifyContent: "center",
+    paddingTop: 20,
+    paddingBottom: 20,
+  },
+  centerBlock: {
+    width: "100%",
+    maxWidth: 520,
+    alignSelf: "center",
   },
   title: {
     fontWeight: "bold",
-    marginTop: 16,
     marginBottom: 8,
+    textAlign: "center",
   },
   subtitle: {
     marginBottom: 20,
+    textAlign: "center",
   },
   formCard: {
     borderRadius: 18,
@@ -221,7 +235,7 @@ const styles = StyleSheet.create({
   footer: {
     alignItems: "center",
     paddingTop: 20,
-    paddingBottom: 18,
+    paddingBottom: 8,
   },
   footerText: {
     textAlign: "center",

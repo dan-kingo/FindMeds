@@ -1,4 +1,5 @@
 import Header from "@/src/components/Header";
+import ScreenBackground from "@/src/components/ScreenBackground";
 import { theme } from "@/src/constants/theme";
 import { notificationAPI } from "@/src/services/api";
 import React, { useState, useEffect } from "react";
@@ -114,14 +115,17 @@ export default function NotificationsScreen() {
 
   if (loading) {
     return (
-      <View style={styles.center}>
-        <ActivityIndicator size="large" />
-      </View>
+      <ScreenBackground>
+        <Header title="Notifications" showBack />
+        <View style={styles.center}>
+          <ActivityIndicator size="large" color={theme.colors.primary} />
+        </View>
+      </ScreenBackground>
     );
   }
 
   return (
-    <>
+    <ScreenBackground>
       <Header title="Notifications" showBack />
       <View style={styles.container}>
         <View style={styles.header}>
@@ -142,7 +146,10 @@ export default function NotificationsScreen() {
           onRefresh={handleRefresh}
           ListEmptyComponent={
             <View style={styles.center}>
-              <Text>No notifications found</Text>
+              <Text style={styles.emptyTitle}>No notifications yet</Text>
+              <Text style={styles.emptySubTitle}>
+                Updates about your orders and account will appear here.
+              </Text>
             </View>
           }
         />
@@ -153,33 +160,35 @@ export default function NotificationsScreen() {
           </View>
         )}
       </View>
-    </>
+    </ScreenBackground>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: theme.colors.background,
+    backgroundColor: "transparent",
+    paddingHorizontal: 16,
   },
   center: {
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    marginTop: 20,
+    marginTop: 30,
+    paddingHorizontal: 26,
   },
   header: {
     flexDirection: "row",
-    justifyContent: "space-between",
+    justifyContent: "flex-end",
     alignItems: "center",
-    padding: 15,
-    backgroundColor: theme.colors.background,
+    padding: 10,
+    marginBottom: 10,
+    borderRadius: 14,
+    backgroundColor: "rgba(23,33,43,0.66)",
+    borderWidth: 1,
+    borderColor: "rgba(160,196,255,0.16)",
     borderBottomWidth: 1,
-    borderBottomColor: theme.colors.outlineVariant,
-  },
-  headerText: {
-    fontSize: 20,
-    fontWeight: "bold",
+    borderBottomColor: "rgba(160,196,255,0.12)",
   },
   markAllButton: {
     padding: 5,
@@ -190,14 +199,17 @@ const styles = StyleSheet.create({
     fontWeight: "500",
   },
   listContent: {
-    paddingBottom: 20,
+    paddingBottom: 26,
   },
   notificationItem: {
-    backgroundColor: theme.colors.background,
+    backgroundColor: "rgba(23,33,43,0.72)",
     padding: 15,
-    marginBottom: 1,
+    marginBottom: 10,
+    borderRadius: 14,
+    borderWidth: 1,
+    borderColor: "rgba(160,196,255,0.16)",
     borderBottomWidth: 1,
-    borderBottomColor: theme.colors.outlineVariant,
+    borderBottomColor: "rgba(160,196,255,0.1)",
     flexDirection: "row",
     alignItems: "center",
   },
@@ -205,21 +217,23 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   unreadNotification: {
-    backgroundColor: theme.colors.background,
+    backgroundColor: "rgba(34,48,64,0.88)",
   },
   notificationTitle: {
     fontSize: 16,
     fontWeight: "bold",
     marginBottom: 5,
+    color: theme.colors.onSurface,
   },
   notificationMessage: {
     fontSize: 14,
-    color: "#555",
+    color: theme.colors.onSurfaceVariant,
     marginBottom: 5,
+    lineHeight: 20,
   },
   notificationDate: {
     fontSize: 12,
-    color: "#999",
+    color: "#7f95ab",
   },
   unreadDot: {
     width: 10,
@@ -230,9 +244,9 @@ const styles = StyleSheet.create({
   },
   unreadCountBadge: {
     position: "absolute",
-    bottom: 20,
+    bottom: 26,
     right: 20,
-    backgroundColor: theme.colors.primary,
+    backgroundColor: "rgba(46,166,255,0.94)",
     borderRadius: 15,
     paddingHorizontal: 12,
     paddingVertical: 6,
@@ -240,5 +254,17 @@ const styles = StyleSheet.create({
   unreadCountText: {
     color: "white",
     fontSize: 14,
+  },
+  emptyTitle: {
+    color: theme.colors.onSurface,
+    fontSize: 18,
+    fontWeight: "600",
+    marginBottom: 6,
+  },
+  emptySubTitle: {
+    color: theme.colors.onSurfaceVariant,
+    fontSize: 14,
+    textAlign: "center",
+    lineHeight: 20,
   },
 });

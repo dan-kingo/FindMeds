@@ -258,6 +258,7 @@ export default function SearchScreen() {
               onChangeText={setSearchQuery}
               value={searchQuery}
               loading={loading}
+              inputStyle={styles.searchInput}
               style={styles.searchBar}
             />
           </View>
@@ -386,6 +387,12 @@ const styles = StyleSheet.create({
     backgroundColor: "rgba(23,33,43,0.72)",
     borderWidth: 1,
     borderColor: "rgba(160,196,255,0.16)",
+    height: 52,
+    justifyContent: "center",
+  },
+  searchInput: {
+    textAlignVertical: "center",
+    paddingVertical: 0,
   },
   filtersSection: {
     marginBottom: 16,
@@ -494,6 +501,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     paddingHorizontal: 32,
+    paddingBottom: 40,
   },
   emptyTitle: {
     marginTop: 16,
