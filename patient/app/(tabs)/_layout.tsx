@@ -92,6 +92,7 @@ export default function TabLayout() {
         name="search"
         options={{
           title: "Search",
+          tabBarHideOnKeyboard: true,
           tabBarIcon: ({ color, focused }) => (
             <TabBarIcon name="magnify" color={color} focused={focused} />
           ),

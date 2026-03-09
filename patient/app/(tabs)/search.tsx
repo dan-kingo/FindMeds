@@ -315,46 +315,37 @@ export default function SearchScreen() {
           </ScrollView>
 
           {/* Search Results */}
-          {searchResults.length > 0 ? (
-            <FlatList
-              data={searchResults}
-              renderItem={renderSearchResult}
-              keyExtractor={(item, index) =>
-                `${item.medicine._id}-${item.pharmacy._id}-${index}`
-              }
-              showsVerticalScrollIndicator={false}
-              contentContainerStyle={styles.resultsList}
-            />
-          ) : searchQuery.trim() ? (
-            <View style={styles.emptyState}>
-              <MaterialCommunityIcons
-                name="magnify"
-                size={64}
-                color={theme.colors.onSurfaceVariant}
+          <View style={styles.resultsArea}>
+            {searchResults.length > 0 ? (
+              <FlatList
+                data={searchResults}
+                renderItem={renderSearchResult}
+                keyExtractor={(item, index) =>
+                  `${item.medicine._id}-${item.pharmacy._id}-${index}`
+                }
+                showsVerticalScrollIndicator={false}
+                keyboardShouldPersistTaps="handled"
+                contentContainerStyle={styles.resultsList}
               />
-              <Text variant="headlineSmall" style={styles.emptyTitle}>
-                No medicines found
-              </Text>
-              <Text variant="bodyMedium" style={styles.emptySubtitle}>
-                Try adjusting your search terms or filters
-              </Text>
-            </View>
-          ) : (
-            <View style={styles.emptyState}>
-              <MaterialCommunityIcons
-                name="magnify"
-                size={64}
-                color={theme.colors.onSurfaceVariant}
-              />
-              <Text variant="headlineSmall" style={styles.emptyTitle}>
-                Search for Medicines
-              </Text>
-              <Text variant="bodyMedium" style={styles.emptySubtitle}>
-                Enter a medicine name to find available options from nearby
-                pharmacies
-              </Text>
-            </View>
-          )}
+            ) : searchQuery.trim() ? (
+              <View style={styles.emptyState}>
+                <MaterialCommunityIcons
+                  name="magnify"
+                  size={64}
+                  color={theme.colors.onSurfaceVariant}
+                />
+                <Text variant="headlineSmall" style={styles.emptyTitle}>
+                  No medicines found
+                </Text>
+                <Text variant="bodyMedium" style={styles.emptySubtitle}>
+                  Try adjusting your search terms or filters
+                </Text>
+              </View>
+            ) 
+             : (
+<Text style={styles.emptyTitle}>.</Text>
+             )}
+          </View>
         </View>
 
         {/* Floating Action Button for Cart */}
@@ -378,6 +369,9 @@ const styles = StyleSheet.create({
   content: {
     flex: 1,
     paddingHorizontal: 16,
+  },
+  resultsArea: {
+    flex: 1,
   },
   searchSection: {
     paddingVertical: 16,
@@ -501,12 +495,13 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     paddingHorizontal: 32,
-    paddingBottom: 40,
   },
   emptyTitle: {
     marginTop: 16,
     marginBottom: 8,
     textAlign: "center",
+    fontSize: 16,
+    fontWeight: "600",
   },
   emptySubtitle: {
     textAlign: "center",

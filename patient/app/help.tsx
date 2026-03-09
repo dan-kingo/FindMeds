@@ -1,8 +1,10 @@
 import { View, Text, StyleSheet, ScrollView, Linking } from "react-native";
-import { Card, Divider, useTheme, List } from "react-native-paper";
+import { Card, Divider, List } from "react-native-paper";
 import { MaterialIcons } from "@expo/vector-icons";
 import { useState } from "react";
 import Header from "@/src/components/Header";
+import ScreenBackground from "@/src/components/ScreenBackground";
+import { theme } from "@/src/constants/theme";
 
 const faqs = [
   {
@@ -33,7 +35,6 @@ const faqs = [
 ];
 
 export default function HelpScreen() {
-  const theme = useTheme();
   const [expandedIds, setExpandedIds] = useState<number[]>([]);
 
   const toggleFAQ = (id: number) => {
@@ -43,78 +44,89 @@ export default function HelpScreen() {
   };
 
   return (
-    <>
-      <Header title="Help Center" showBack />
-      <ScrollView
-        contentContainerStyle={[
-          styles.container,
-          { backgroundColor: theme.colors.background },
-        ]}
-        showsVerticalScrollIndicator={false}
-      >
-        <View style={styles.header}>
-          <MaterialIcons
-            name="help-outline"
-            size={32}
-            color={theme.colors.primary}
-          />
-          <Text style={[styles.title, { color: theme.colors.primary }]}>
-            Help Center
-          </Text>
-          <Text style={styles.subtitle}>Find answers to common questions</Text>
-        </View>
+    <ScreenBackground>
+      <View style={styles.screen}>
+        <Header title="Help Center" showBack />
+        <ScrollView
+          contentContainerStyle={styles.container}
+          showsVerticalScrollIndicator={false}
+        >
+          <View style={styles.header}>
+            <MaterialIcons
+              name="help-outline"
+              size={32}
+              color={theme.colors.primary}
+            />
+            <Text style={[styles.title, { color: theme.colors.primary }]}>
+              Help Center
+            </Text>
+            <Text style={styles.subtitle}>
+              Find answers to common questions
+            </Text>
+          </View>
 
-        <Card style={[styles.card, { backgroundColor: theme.colors.surface }]}>
-          <Card.Content>
-            {faqs.map((faq, index) => (
-              <View key={index}>
-                <List.Accordion
-                  title={faq.question}
-                  titleStyle={styles.question}
-                  expanded={expandedIds.includes(index)}
-                  onPress={() => toggleFAQ(index)}
-                  left={(props) => (
-                    <List.Icon
-                      {...props}
-                      icon={expandedIds.includes(index) ? "minus" : "plus"}
-                    />
-                  )}
-                >
-                  <Text
-                    style={[styles.answer, { color: theme.colors.onSurface }]}
+          <Card style={styles.card}>
+            <Card.Content>
+              {faqs.map((faq, index) => (
+                <View key={index}>
+                  <List.Accordion
+                    title={faq.question}
+                    titleStyle={styles.question}
+                    style={styles.accordion}
+                    expanded={expandedIds.includes(index)}
+                    onPress={() => toggleFAQ(index)}
+                    left={(props) => (
+                      <List.Icon
+                        {...props}
+                        icon={expandedIds.includes(index) ? "minus" : "plus"}
+                      />
+                    )}
                   >
-                    {faq.answer}
-                  </Text>
-                </List.Accordion>
-                {index < faqs.length - 1 && <Divider />}
-              </View>
-            ))}
-          </Card.Content>
-        </Card>
+                    <Text
+                      style={[styles.answer, { color: theme.colors.onSurface }]}
+                    >
+                      {faq.answer}
+                    </Text>
+                  </List.Accordion>
+                  {index < faqs.length - 1 && (
+                    <Divider style={styles.divider} />
+                  )}
+                </View>
+              ))}
+            </Card.Content>
+          </Card>
 
-        <View style={styles.helpSection}>
-          <Text style={[styles.helpTitle, { color: theme.colors.primary }]}>
-            Still need help?
-          </Text>
-          <Text style={[styles.helpText, { color: theme.colors.onSurface }]}>
-            Contact our support team for personalized assistance.
-          </Text>
-          <List.Item
-            title="Contact Support"
-            description="We're available 24/7"
-            left={(props) => <List.Icon {...props} icon="email" />}
-            onPress={() => Linking.openURL("mailto:support@findmeds.com")}
-            style={styles.contactItem}
-          />
-        </View>
-      </ScrollView>
-    </>
+          <Card style={styles.helpSection}>
+            <Card.Content>
+              <Text style={[styles.helpTitle, { color: theme.colors.primary }]}>
+                Still need help?
+              </Text>
+              <Text
+                style={[styles.helpText, { color: theme.colors.onSurface }]}
+              >
+                Contact our support team for personalized assistance.
+              </Text>
+              <List.Item
+                title="Contact Support"
+                description="We're available 24/7"
+                left={(props) => <List.Icon {...props} icon="email" />}
+                onPress={() => Linking.openURL("mailto:support@findmeds.com")}
+                style={styles.contactItem}
+              />
+            </Card.Content>
+          </Card>
+        </ScrollView>
+      </View>
+    </ScreenBackground>
   );
 }
 
 const styles = StyleSheet.create({
+  screen: {
+    flex: 1,
+  },
   container: {
-    padding: 20,
+    padding: 16,
     paddingBottom: 40,
   },
   header: {
@@ -129,15 +141,22 @@ const styles = StyleSheet.create({
   },
   subtitle: {
     fontSize: 16,
-    color: "#666",
+    color: theme.colors.onSurfaceVariant,
   },
   card: {
-    borderRadius: 12,
+    borderRadius: 14,
+    borderWidth: 1,
+    borderColor: "rgba(160,196,255,0.16)",
+    backgroundColor: "rgba(23,33,43,0.72)",
     marginBottom: 20,
   },
   question: {
     fontWeight: "500",
     fontSize: 16,
+    color: theme.colors.onSurface,
+  },
+  accordion: {
+    backgroundColor: "transparent",
   },
   answer: {
     padding: 16,
@@ -145,9 +164,15 @@ const styles = StyleSheet.create({
     fontSize: 15,
     lineHeight: 22,
   },
+  divider: {
+    backgroundColor: "rgba(160,196,255,0.14)",
+  },
   helpSection: {
-    marginTop: 10,
-    paddingHorizontal: 8,
+    marginTop: 6,
+    borderRadius: 14,
+    borderWidth: 1,
+    borderColor: "rgba(160,196,255,0.16)",
+    backgroundColor: "rgba(23,33,43,0.72)",
   },
   helpTitle: {
     fontSize: 18,

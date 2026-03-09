@@ -14,6 +14,7 @@ import { useRouter } from "expo-router";
 import * as Location from "expo-location";
 import { profileAPI } from "@/src/services/api";
 import Header from "@/src/components/Header";
+import ScreenBackground from "@/src/components/ScreenBackground";
 import { theme } from "@/src/constants/theme";
 
 interface Address {
@@ -255,169 +256,191 @@ const ManageAddressesScreen = () => {
 
   if (loading && addresses.length === 0) {
     return (
-      <View style={styles.loader}>
-        <ActivityIndicator animating={true} size="large" />
-      </View>
+      <ScreenBackground>
+        <View style={styles.loader}>
+          <ActivityIndicator animating={true} size="large" />
+        </View>
+      </ScreenBackground>
     );
   }
 
   return (
-    <>
-      <Header title="Manage Addresses" showBack />
+    <ScreenBackground>
+      <View style={styles.screen}>
+        <Header title="Manage Addresses" showBack />
 
-      <View style={styles.container}>
-        {error ? (
-          <Text style={styles.errorText}>{error}</Text>
-        ) : (
-          <FlatList
-            data={addresses}
-            renderItem={renderAddressItem}
-            keyExtractor={(item) => item._id}
-            contentContainerStyle={styles.listContent}
-            ListEmptyComponent={
-              <Text style={styles.emptyText}>No addresses saved</Text>
-            }
-          />
-        )}
+        <View style={styles.container}>
+          {error ? (
+            <Text style={styles.errorText}>{error}</Text>
+          ) : (
+            <FlatList
+              data={addresses}
+              renderItem={renderAddressItem}
+              keyExtractor={(item) => item._id}
+              contentContainerStyle={styles.listContent}
+              ListEmptyComponent={
+                <Text style={styles.emptyText}>No addresses saved</Text>
+              }
+            />
+          )}
 
-        <Button
-          mode="contained"
-          onPress={openAddModal}
-          style={styles.addButton}
-          icon="plus"
-        >
-          Add New Address
-        </Button>
-
-        <Portal>
-          <Modal
-            visible={modalVisible}
-            onDismiss={() => {
-              setModalVisible(false);
-              resetForm();
-            }}
-            contentContainerStyle={styles.modalContent}
+          <Button
+            mode="contained"
+            onPress={openAddModal}
+            style={styles.addButton}
+            icon="plus"
           >
-            <Text variant="titleLarge" style={styles.modalTitle}>
-              {editMode ? "Edit Address" : "Add New Address"}
-            </Text>
+            Add New Address
+          </Button>
 
-            <ScrollView>
-              <TextInput
-                label="Label (e.g., Home, Work)"
-                value={label}
-                onChangeText={setLabel}
-                mode="outlined"
-                style={styles.input}
-                error={!!formErrors.label}
-              />
-              {formErrors.label ? (
-                <Text style={styles.error}>{formErrors.label}</Text>
-              ) : null}
+          <Portal>
+            <Modal
+              visible={modalVisible}
+              onDismiss={() => {
+                setModalVisible(false);
+                resetForm();
+              }}
+              contentContainerStyle={styles.modalContent}
+            >
+              <Text variant="titleLarge" style={styles.modalTitle}>
+                {editMode ? "Edit Address" : "Add New Address"}
+              </Text>
 
-              <TextInput
-                label="Street Address"
-                value={street}
-                onChangeText={setStreet}
-                mode="outlined"
-                style={styles.input}
-                error={!!formErrors.street}
-              />
-              {formErrors.street ? (
-                <Text style={styles.error}>{formErrors.street}</Text>
-              ) : null}
-
-              <TextInput
-                label="City"
-                value={city}
-                onChangeText={setCity}
-                mode="outlined"
-                style={styles.input}
-                error={!!formErrors.city}
-              />
-              {formErrors.city ? (
-                <Text style={styles.error}>{formErrors.city}</Text>
-              ) : null}
-
-              <View style={styles.locationContainer}>
+              <ScrollView>
                 <TextInput
-                  label="Latitude"
-                  value={latitude}
-                  onChangeText={setLatitude}
+                  label="Label (e.g., Home, Work)"
+                  value={label}
+                  onChangeText={setLabel}
                   mode="outlined"
-                  style={[styles.input, styles.locationInput]}
-                  keyboardType="numeric"
+                  style={styles.input}
+                  outlineColor="rgba(160,196,255,0.2)"
+                  activeOutlineColor={theme.colors.primary}
+                  textColor={theme.colors.onSurface}
+                  error={!!formErrors.label}
                 />
+                {formErrors.label ? (
+                  <Text style={styles.error}>{formErrors.label}</Text>
+                ) : null}
 
                 <TextInput
-                  label="Longitude"
-                  value={longitude}
-                  onChangeText={setLongitude}
+                  label="Street Address"
+                  value={street}
+                  onChangeText={setStreet}
                   mode="outlined"
-                  style={[styles.input, styles.locationInput]}
-                  keyboardType="numeric"
+                  style={styles.input}
+                  outlineColor="rgba(160,196,255,0.2)"
+                  activeOutlineColor={theme.colors.primary}
+                  textColor={theme.colors.onSurface}
+                  error={!!formErrors.street}
                 />
-              </View>
+                {formErrors.street ? (
+                  <Text style={styles.error}>{formErrors.street}</Text>
+                ) : null}
 
-              <Button
-                mode="outlined"
-                onPress={getCurrentLocation}
-                style={styles.locationButton}
-                icon="crosshairs-gps"
-                loading={locationLoading}
-                disabled={locationLoading}
-              >
-                Use Current Location
-              </Button>
+                <TextInput
+                  label="City"
+                  value={city}
+                  onChangeText={setCity}
+                  mode="outlined"
+                  style={styles.input}
+                  outlineColor="rgba(160,196,255,0.2)"
+                  activeOutlineColor={theme.colors.primary}
+                  textColor={theme.colors.onSurface}
+                  error={!!formErrors.city}
+                />
+                {formErrors.city ? (
+                  <Text style={styles.error}>{formErrors.city}</Text>
+                ) : null}
 
-              <View style={styles.modalButtons}>
+                <View style={styles.locationContainer}>
+                  <TextInput
+                    label="Latitude"
+                    value={latitude}
+                    onChangeText={setLatitude}
+                    mode="outlined"
+                    style={[styles.input, styles.locationInput]}
+                    outlineColor="rgba(160,196,255,0.2)"
+                    activeOutlineColor={theme.colors.primary}
+                    textColor={theme.colors.onSurface}
+                    keyboardType="numeric"
+                  />
+
+                  <TextInput
+                    label="Longitude"
+                    value={longitude}
+                    onChangeText={setLongitude}
+                    mode="outlined"
+                    style={[styles.input, styles.locationInput]}
+                    outlineColor="rgba(160,196,255,0.2)"
+                    activeOutlineColor={theme.colors.primary}
+                    textColor={theme.colors.onSurface}
+                    keyboardType="numeric"
+                  />
+                </View>
+
                 <Button
                   mode="outlined"
-                  onPress={() => {
-                    setModalVisible(false);
-                    resetForm();
-                  }}
-                  style={styles.cancelButton}
+                  onPress={getCurrentLocation}
+                  style={styles.locationButton}
+                  icon="crosshairs-gps"
+                  loading={locationLoading}
+                  disabled={locationLoading}
                 >
-                  Cancel
+                  Use Current Location
                 </Button>
-                <Button
-                  mode="contained"
-                  onPress={handleSubmit}
-                  loading={loading}
-                  disabled={loading}
-                  style={styles.submitButton}
-                >
-                  {editMode ? "Update" : "Save"}
-                </Button>
-              </View>
-            </ScrollView>
-          </Modal>
-        </Portal>
+
+                <View style={styles.modalButtons}>
+                  <Button
+                    mode="outlined"
+                    onPress={() => {
+                      setModalVisible(false);
+                      resetForm();
+                    }}
+                    style={styles.cancelButton}
+                  >
+                    Cancel
+                  </Button>
+                  <Button
+                    mode="contained"
+                    onPress={handleSubmit}
+                    loading={loading}
+                    disabled={loading}
+                    style={styles.submitButton}
+                  >
+                    {editMode ? "Update" : "Save"}
+                  </Button>
+                </View>
+              </ScrollView>
+            </Modal>
+          </Portal>
+        </View>
       </View>
-    </>
+    </ScreenBackground>
   );
 };
 
 const styles = StyleSheet.create({
+  screen: {
+    flex: 1,
+  },
   container: {
     flex: 1,
     padding: 16,
-    backgroundColor: theme.colors.background,
   },
   loader: {
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: theme.colors.background,
   },
   listContent: {
     paddingBottom: 16,
   },
   addressCard: {
     marginBottom: 12,
-    elevation: 2,
-    backgroundColor: theme.colors.background,
+    borderRadius: 14,
+    borderWidth: 1,
+    borderColor: "rgba(160,196,255,0.16)",
+    backgroundColor: "rgba(23,33,43,0.72)",
   },
   addressHeader: {
     flexDirection: "row",
@@ -426,31 +449,35 @@ const styles = StyleSheet.create({
     marginBottom: 8,
   },
   addressLabel: {
-    fontWeight: "bold",
+    fontWeight: "700",
+    color: theme.colors.onSurface,
   },
   addressActions: {
     flexDirection: "row",
   },
   addButton: {
     marginTop: 8,
-    borderRadius: 4,
+    borderRadius: 10,
     paddingVertical: 6,
   },
   modalContent: {
-    backgroundColor: theme.colors.background,
+    backgroundColor: "rgba(23,33,43,0.95)",
     padding: 20,
     margin: 20,
-    borderRadius: 8,
+    borderRadius: 16,
+    borderWidth: 1,
+    borderColor: "rgba(160,196,255,0.16)",
     maxHeight: "80%",
   },
   modalTitle: {
     marginBottom: 16,
     textAlign: "center",
-    fontWeight: "bold",
+    fontWeight: "700",
+    color: theme.colors.onSurface,
   },
   input: {
     marginBottom: 8,
-    backgroundColor: "transparent",
+    backgroundColor: "rgba(23,33,43,0.6)",
   },
   locationInput: {
     flex: 1,
@@ -465,7 +492,7 @@ const styles = StyleSheet.create({
     marginBottom: 16,
   },
   error: {
-    color: "red",
+    color: theme.colors.error,
     marginBottom: 12,
     marginLeft: 4,
     fontSize: 12,
@@ -486,14 +513,14 @@ const styles = StyleSheet.create({
     backgroundColor: theme.colors.primary,
   },
   errorText: {
-    color: "red",
+    color: theme.colors.error,
     textAlign: "center",
     marginTop: 16,
   },
   emptyText: {
     textAlign: "center",
     marginTop: 16,
-    color: "#666",
+    color: theme.colors.onSurfaceVariant,
   },
 });
 
