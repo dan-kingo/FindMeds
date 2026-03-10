@@ -29,31 +29,38 @@ export default function RegisterScreen() {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
-  const validateForm = () => {
+  const validateForm = (values: {
+    name: string;
+    phone: string;
+    email: string;
+    location: string;
+    password: string;
+    confirmPassword: string;
+  }) => {
     const newErrors: { [key: string]: string } = {};
 
-    if (!formData.name.trim()) {
+    if (!values.name) {
       newErrors.name = "Name is required";
     }
 
-    if (!formData.phone.trim()) {
+    if (!values.phone) {
       newErrors.phone = "Phone number is required";
     }
 
-    if (!formData.email.trim()) {
+    if (!values.email) {
       newErrors.email = "Email is required";
-    } else if (!/^\S+@\S+\.\S+$/.test(formData.email)) {
+    } else if (!/^\S+@\S+\.\S+$/.test(values.email)) {
       newErrors.email = "Please enter a valid email address";
     }
 
-    if (!formData.location.trim()) {
+    if (!values.location) {
       newErrors.location = "Location is required";
     }
 
-    if (!password || password.length < 6) {
+    if (!values.password || values.password.length < 6) {
       newErrors.password = "Password must be at least 6 characters";
     }
-    if (password !== confirmPassword) {
+    if (values.password !== values.confirmPassword) {
       newErrors.confirmPassword = "Passwords do not match";
     }
 
@@ -62,20 +69,29 @@ export default function RegisterScreen() {
   };
 
   const handleRegister = async () => {
-    if (!validateForm()) return;
+    const payload = {
+      name: formData.name.trim(),
+      phone: formData.phone.trim(),
+      email: formData.email.trim(),
+      location: formData.location.trim(),
+      password: password.trim(),
+      confirmPassword: confirmPassword.trim(),
+    };
+
+    if (!validateForm(payload)) return;
 
     setLoading(true);
     try {
       // Create or mark user verified with details
       await authAPI.requestOtp({
-        phone: formData.phone,
-        name: formData.name,
-        email: formData.email,
-        location: formData.location,
+        phone: payload.phone,
+        name: payload.name,
+        email: payload.email,
+        location: payload.location,
       });
 
       // Set password and get token in one step
-      const response = await authAPI.verifyOtp(formData.phone, password);
+      const response = await authAPI.verifyOtp(payload.phone, payload.password);
       const { token, user } = response.data;
       // Store token and user via auth store
       const { login } =

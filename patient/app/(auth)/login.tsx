@@ -22,14 +22,14 @@ export default function LoginScreen() {
     {},
   );
 
-  const validateForm = () => {
+  const validateForm = (values: { phone: string; password: string }) => {
     const newErrors: { phone?: string; password?: string } = {};
 
-    if (!phone) {
+    if (!values.phone) {
       newErrors.phone = "Phone number is required";
     }
 
-    if (!password) {
+    if (!values.password) {
       newErrors.password = "Password is required";
     }
 
@@ -38,11 +38,19 @@ export default function LoginScreen() {
   };
 
   const handleLogin = async () => {
-    if (!validateForm()) return;
+    const payload = {
+      phone: phone.trim(),
+      password: password.trim(),
+    };
+
+    if (!validateForm(payload)) return;
 
     setLoading(true);
     try {
-      const response = await authAPI.loginWithPassword(phone, password);
+      const response = await authAPI.loginWithPassword(
+        payload.phone,
+        payload.password,
+      );
       const { token, user } = response.data;
       login(token, user);
       Toast.show({
