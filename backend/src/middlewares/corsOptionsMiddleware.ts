@@ -13,15 +13,53 @@ const whitelist: string[] = [
   "https://findmeds-admin.vercel.app",
 ];
 
+const allowedHostSuffixes = [".vercel.app"];
+
+const allowedHostPrefixes = [
+  "findmeds",
+  "findmeds-admin",
+  "medstream",
+  "medstream-admin",
+  "medstream-five",
+];
+
+const extraOriginsFromEnv = (process.env.CORS_ORIGINS || "")
+  .split(",")
+  .map((origin) => origin.trim())
+  .filter(Boolean);
+
+const isAllowedVercelOrigin = (origin: string) => {
+  try {
+    const url = new URL(origin);
+    const host = url.hostname.toLowerCase();
+    const isKnownPrefix = allowedHostPrefixes.some(
+      (prefix) =>
+        host === `${prefix}.vercel.app` || host.startsWith(`${prefix}-`),
+    );
+    const isKnownSuffix = allowedHostSuffixes.some((suffix) =>
+      host.endsWith(suffix),
+    );
+    return isKnownPrefix && isKnownSuffix;
+  } catch {
+    return false;
+  }
+};
+
+const isAllowedOrigin = (origin: string) =>
+  whitelist.includes(origin) ||
+  extraOriginsFromEnv.includes(origin) ||
+  isAllowedVercelOrigin(origin);
+
 const corsOptions: CorsOptions = {
   origin: (
     origin: string | undefined,
-    callback: (err: Error | null, allow?: boolean) => void
+    callback: (err: Error | null, allow?: boolean) => void,
   ) => {
-    if (!origin || whitelist.includes(origin)) {
+    if (!origin || isAllowedOrigin(origin)) {
       callback(null, true); // Allow request
     } else {
-      callback(new Error("Not allowed by CORS"));
+      // Do not throw here; returning false avoids surfacing as 500 for preflight.
+      callback(null, false);
     }
   },
 };

@@ -13,7 +13,7 @@
     "icon": "./assets/images/FindMeds.png",
     "scheme": "findmeds-patient",
     "userInterfaceStyle": "automatic",
-    "newArchEnabled": false,
+    "newArchEnabled": true,
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.dankingo.findmeds.patient",
